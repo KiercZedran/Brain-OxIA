@@ -419,1610 +419,1602 @@ Accept partial input — the audit scope adjusts to what's available.
 
 ## RESEARCH REFERENCE
 
-Everything that follows is the complete research v2 (May 2026). Read it in full before responding in either mode. All architectural decisions must be supported by it.
+Everything that follows is the complete research v2 (May 2026). Read it in full before responding in any mode. All architectural decisions must be supported by it.
 
-## INVESTIGACIÓN DE REFERENCIA
+Technical Research — AI Knowledge Brains
 
-Todo lo que sigue es la investigación completa v2 (mayo 2026). Leerla completa antes de responder en cualquier modo. Todas las decisiones arquitectónicas deben estar respaldadas por ella.
+# Obsidian + Artificial Intelligence
+Persistent Knowledge Brains
 
-Investigación Técnica — Cerebros de IA 
+From Karpathy's LLM Wiki pattern to the complete vault architecture with layered memory, scheduled agents, and multi-model connections.
+Original research · April 2026 · Obsidian v1.12.7 · Claude · Gemini · GPT · Local models · Living document — expand with new research
 
-# Obsidian + Inteligencia Artificial 
-Cerebros de Conocimiento Persistente 
-
-Del patrón LLM Wiki de Karpathy a la arquitectura completa de vaults con memoria en capas, agentes programados y conexión multi-modelo 
-Investigación original · Abril 2026 Obsidian v1.12.7 Claude · Gemini · GPT · Modelos locales Documento vivo — ampliar con nuevas investigaciones 
-I Fundamentos El origen, qué es, para qué sirve 
-II Markdown y Vaults Sintaxis, conexión multi-vault 
-III Contratos con la IA CLAUDE.md, skills oficiales, prompting 
-IV Plugins Stack completo para cerebros con IA 
-V MCP Servers El ecosistema completo 
-VI Memoria en Capas Working, episódica, semántica 
-VII Hot Cache y Tokens Tiering, costos, optimización 
-VIII Multi-Agente Vault como capa agnóstica 
-IX Contaminación Separación human vs agent 
-X Heartbeat Agentes programados 
-XI Memoria Nativa Anthropic Estado real abril 2026 
-XII Guía Práctica Implementación paso a paso 
-XIII Graphify Preprocesador multimodal para Obsidian · Mayo 2026 
+I Foundations — Origin, what it is, what it's for
+II Markdown & Vaults — Syntax, multi-vault connections
+III AI Contracts — CLAUDE.md, official skills, prompting
+IV Plugins — Full stack for AI brains
+V MCP Servers — The complete ecosystem
+VI Layered Memory — Working, episodic, semantic
+VII Hot Cache & Tokens — Tiering, costs, optimization
+VIII Multi-Agent — Vault as agnostic layer
+IX Contamination — Human vs. agent separation
+X Heartbeat — Scheduled agents
+XI Anthropic Native Memory — Real state April 2026
+XII Practical Guide — Step-by-step implementation
+XIII Graphify — Multimodal preprocessor for Obsidian · May 2026
 
 
-I · Fundamentos II · Markdown III · CLAUDE.md IV · Plugins V · MCP VI · Memoria VII · Hot Cache VIII · Multi-Agente IX · Contaminación X · Heartbeat XI · Anthropic 2026 XII · Guía Práctica XIII · Graphify 
+Part I
 
-Parte I 
+## The Origin: LLM Wiki and the AI Second Brain
 
-## El Origen: LLM Wiki y el Segundo Cerebro con IA 
-
-Cómo un post de Andrej Karpathy en abril 2026 desencadenó uno de los movimientos de gestión de conocimiento más significativos del ecosistema de IA. 
+How a post by Andrej Karpathy in April 2026 triggered one of the most significant knowledge management movements in the AI ecosystem.
 
 
-El problema es tan simple como frustrante: usas una IA todos los días, pero cada sesión comienza desde cero. Re-explicas el contexto de tus proyectos, vuelves a describir quién eres, repites decisiones que ya tomaste hace semanas. La conversación termina y todo desaparece. El conocimiento que construiste con esa IA muere con la sesión. 
+The problem is as simple as it is frustrating: you use AI every day, but every session starts from zero. You re-explain your project context, describe yourself again, repeat decisions you made weeks ago. The conversation ends and everything disappears. The knowledge you built with that AI dies with the session.
 
-En abril de 2026, Andrej Karpathy —cofundador de OpenAI y ex-Director de IA en Tesla— publicó en X una descripción de su nuevo flujo de trabajo personal. En lugar de usar LLMs principalmente para generar código, había comenzado a usarlos para construir bases de conocimiento. El post acumuló más de 16 millones de vistas y su GitHub Gist de seguimiento superó las 5,000 estrellas en días. El timing fue preciso: el ecosistema de herramientas (Claude Code, Gemini CLI, MCP protocol) estaba listo para ejecutar el patrón. 
+In April 2026, Andrej Karpathy — co-founder of OpenAI and former Director of AI at Tesla — posted on X describing his new personal workflow. Instead of using LLMs primarily to generate code, he had started using them to build knowledge bases. The post accumulated over 16 million views and his follow-up GitHub Gist surpassed 5,000 stars within days. The timing was precise: the tooling ecosystem (Claude Code, Gemini CLI, MCP protocol) was ready to execute the pattern.
 
-### El Concepto Central: LLM Wiki 
+### The Core Concept: LLM Wiki
 
-Lo que Karpathy describió no es un producto ni una herramienta específica. Es un patrón de trabajo : en lugar de dispersar el conocimiento entre Notion, Google Docs, bookmarks y notas sueltas, guardas todo como archivos Markdown estructurados y apuntas un agente de IA a esa carpeta. El LLM lee tus archivos, encuentra lo relevante y te da respuestas basadas en tu propio conocimiento acumulado, no en el internet general. 
+What Karpathy described is not a product or a specific tool. It is a working pattern: instead of scattering knowledge across Notion, Google Docs, bookmarks, and loose notes, you store everything as structured Markdown files and point an AI agent at that folder. The LLM reads your files, finds what's relevant, and gives you answers based on your own accumulated knowledge — not the general internet.
 
-La distinción fundamental: En RAG tradicional, cada vez que preguntas algo, el sistema busca en tus documentos crudos desde cero. Nunca aprende. En el LLM Wiki, el conocimiento ya está pre-compilado y organizado . El agente navega un índice estructurado, no archivos desordenados. El sistema aprende y crece con cada ingestión. 
+The fundamental distinction: In traditional RAG, every time you ask something, the system searches your raw documents from scratch. It never learns. In the LLM Wiki, knowledge is already pre-compiled and organized. The agent navigates a structured index, not disordered files. The system learns and grows with each ingestion.
 
-### ¿Por qué Obsidian específicamente? 
+### Why Obsidian specifically?
 
-Obsidian es una aplicación de gestión de conocimiento local que almacena notas como archivos Markdown planos en tu dispositivo. A diferencia de Notion, Google Docs o Evernote, no requiere internet y no encierra tu información en un formato propietario. Tiene links bidireccionales, una vista de grafo visual, y más de 2,700 plugins. Pero la razón técnica más importante es simple: un vault de Obsidian es solo una carpeta con archivos .md . Cualquier herramienta de IA que lea archivos puede trabajar con él. 
+Obsidian is a local knowledge management application that stores notes as plain Markdown files on your device. Unlike Notion, Google Docs, or Evernote, it requires no internet and does not lock your information in a proprietary format. It has bidirectional links, a visual graph view, and over 2,700 plugins. But the most important technical reason is simple: an Obsidian vault is just a folder with .md files. Any AI tool that can read files can work with it.
 
-En 2026, Obsidian superó 1.5 millones de usuarios activos. Cuando los agentes de IA comenzaron a necesitar memoria persistente, la comunidad descubrió que los vaults de Obsidian eran el formato ideal: texto plano, sin lock-in, portable entre modelos, completamente local. 
+In 2026, Obsidian surpassed 1.5 million active users. When AI agents began needing persistent memory, the community discovered that Obsidian vaults were the ideal format: plain text, no lock-in, portable between models, completely local.
 
-🧠 
-No es un producto 
-Es un patrón de trabajo. No requiere suscripción ni infraestructura compleja. Solo archivos Markdown, disciplina para alimentarlo, y un agente que haga el mantenimiento. 
+🧠
+Not a product
+It is a working pattern. It requires no subscription or complex infrastructure. Just Markdown files, discipline to feed it, and an agent to do the maintenance.
 
-🔒 
-Local-first 
-Los archivos viven en tu dispositivo. Tú controlas quién accede, qué se sincroniza, qué permanece privado. No hay dependencia de servidores externos. 
+🔒
+Local-first
+Files live on your device. You control who accesses them, what syncs, what stays private. No dependency on external servers.
 
-♻️ 
-Compounding 
-El vault del lunes sabe más que el del domingo. Cada ingestión no crea notas aisladas — crea notas tejidas en una malla de conexiones que crece con el tiempo. 
+♻️
+Compounding
+Monday's vault knows more than Sunday's. Each ingestion doesn't create isolated notes — it creates notes woven into a mesh of connections that grows over time.
 
-🔄 
-Portabilidad 
-Si cambias de Claude a Gemini mañana, el vault persiste. Cambias el motor, no los datos. Es la garantía anti-lock-in más robusta disponible hoy. 
-
-
-### El problema que resuelve: el impuesto de la amnesia 
-
-Cada desarrollador o profesional que usa IA agéntica eventualmente choca con el mismo techo: el impuesto de la apatridia . En su estado predeterminado, cada nueva sesión es una lobotomía forzada. Se reporta que los usuarios gastan entre 10 y 15 minutos al inicio de cada sesión solo re-explicando contexto. Con un vault conectado, esa inversión ocurre una sola vez . 
-
-El segundo problema es la fragmentación: tomas la misma decisión dos veces porque olvidaste que ya la tomaste hace seis meses. El vault como memoria persistente significa que cada decisión, cada insight, cada patrón identificado queda registrado y es recuperable por la IA en futuras sesiones. 
-
-El insight de Karpathy sobre el sistema de Karpathy: Su wiki llegó a aproximadamente 100 artículos y 400,000 palabras y el LLM aún podía navegar eficientemente usando el índice y los resúmenes — sin necesitar búsqueda vectorial ni embeddings. Reportado como 70x más eficiente que RAG a escala personal. 
-
-### El flujo operativo del patrón 
-
-01 
-Recolectar 
-artículos, PDFs, 
-URLs, notas 
-
-→ 
-02 
-Ingestar 
-cae en raw/ 
-agente lo lee 
-
-→ 
-03 
-Compilar 
-LLM escribe 
-páginas wiki 
-
-→ 
-04 
-Navegar 
-Obsidian graph 
-ver conexiones 
-
-→ 
-05 
-Preguntar 
-queries con 
-contexto propio 
-
-→ 
-06 
-Mantener 
-lint, corregir, 
-actualizar 
+🔄
+Portability
+If you switch from Claude to Gemini tomorrow, the vault persists. You change the engine, not the data. It is the most robust anti-lock-in guarantee available today.
 
 
-### La arquitectura extendida: Wiki + CRM + Journal 
+### The problem it solves: the amnesia tax
 
-La comunidad documentó en mayo 2026 una extensión del patrón original de Karpathy que agrega dos capas de alto valor sin complejidad adicional. La estructura completa recomendada es: /raw , /raw/processed , /wiki , /journal , /crm , más tres archivos raíz: agents.md , index.md y log.md . 
+Every developer or professional who uses agentic AI eventually hits the same ceiling: the statelessness tax. In its default state, every new session is a forced lobotomy. Users reportedly spend 10–15 minutes at the start of each session just re-explaining context. With a connected vault, that investment happens only once.
 
-La capa CRM almacena registros de personas — colaboradores, contactos, personas mencionadas en tus notas — como entidades con sus propias páginas wiki. La capa Journal es donde el sistema gana su valor para el uso diario: entradas con fecha que el agente conecta al contexto del vault. El comportamiento que separa esto de un RAG estático: cuando consultas el vault, el agente responde desde páginas wiki existentes y luego crea una nueva página wiki sintetizando la respuesta, registra la consulta en log.md , y actualiza index.md . El acto de hacer una pregunta expande la base de conocimiento. 
+The second problem is fragmentation: you make the same decision twice because you forgot you already made it six months ago. The vault as persistent memory means every decision, every insight, every identified pattern is recorded and retrievable by the AI in future sessions.
 
-Vault-first research (mayo 2026): El patrón más reciente documentado es el comando /research-deep que corre en 4 fases: (1) escaneo del vault para identificar qué ya sabes sobre el tema, (2) análisis de gaps, (3) búsqueda dirigida solo sobre lo nuevo , (4) delta report: qué es nuevo, qué está confirmado, contradicciones a resolver, actualizaciones recomendadas al vault. Costo reportado ~$0.40-$0.80 por llamada. El vault-first significa que se deja de re-investigar lo que ya está en las notas. 
+Karpathy's insight about the system: His wiki reached approximately 100 articles and 400,000 words and the LLM could still navigate efficiently using the index and summaries — without needing vector search or embeddings. Reported as 70x more efficient than RAG at personal scale.
 
-Parte II 
+### The operational flow of the pattern
 
-## Markdown en Obsidian y Arquitectura de Vaults 
+01
+Collect
+articles, PDFs,
+URLs, notes
 
-Qué sintaxis acepta Obsidian, qué es portable entre herramientas, y cómo conectar — o no conectar — múltiples vaults. 
+→
+02
+Ingest
+drops into raw/
+agent reads it
+
+→
+03
+Compile
+LLM writes
+wiki pages
+
+→
+04
+Navigate
+Obsidian graph
+see connections
+
+→
+05
+Query
+queries with
+own context
+
+→
+06
+Maintain
+lint, fix,
+update
 
 
-### La base: CommonMark + extensiones propias 
+### The extended architecture: Wiki + CRM + Journal
 
-Obsidian no inventa un Markdown propio. Parte del estándar CommonMark y GFM (GitHub Flavored Markdown) y agrega extensiones encima. Esto tiene dos implicaciones importantes: todo lo que sabes de Markdown estándar funciona aquí, y las extensiones de Obsidian son poderosas dentro del vault pero no renderizan en otras herramientas. El archivo subyacente siempre permanece .md plano — intacto si lo abres en cualquier editor de texto. 
+The community documented in May 2026 an extension of Karpathy's original pattern that adds two high-value layers without additional complexity. The recommended complete structure is: /raw, /raw/processed, /wiki, /journal, /crm, plus three root files: agents.md, index.md, and log.md.
 
-Markdown estándar — 100% portable 
-# Headings H1–H6, Bold, Italic, Strikethrough **negrita** *cursiva* ~~tachado~~ ==resaltado== # Código `código inline`
-```lenguaje
-bloque de código
-``` # Tablas, listas, checkboxes - [ ] tarea pendiente
-- [x] tarea completada # Links y footnotes [texto externo](https://url.com)
-[^1]: nota al pie 
+The CRM layer stores people records — collaborators, contacts, people mentioned in your notes — as entities with their own wiki pages. The Journal layer is where the system gains its value for daily use: date-stamped entries that the agent connects to vault context. The behavior that separates this from a static RAG: when you query the vault, the agent responds from existing wiki pages and then creates a new wiki page synthesizing the answer, records the query in log.md, and updates index.md. The act of asking a question expands the knowledge base.
+
+Vault-first research (May 2026): The most recently documented pattern is the /research-deep command that runs in 4 phases: (1) vault scan to identify what you already know about the topic, (2) gap analysis, (3) directed search only on what's new, (4) delta report: what is new, what is confirmed, contradictions to resolve, recommended vault updates. Reported cost ~$0.40–$0.80 per call. Vault-first means you stop re-researching what is already in your notes.
+
+Part II
+
+## Markdown in Obsidian and Vault Architecture
+
+What syntax Obsidian accepts, what is portable between tools, and how to connect — or not connect — multiple vaults.
 
 
-### Extensiones exclusivas de Obsidian 
+### The base: CommonMark + custom extensions
 
-Estas son las que hacen al vault especial para cerebros de IA. El agente debe conocerlas para escribir notas correctamente (de ahí la importancia de las Obsidian Skills, cubierto en Parte III). 
+Obsidian does not invent its own Markdown. It starts from the CommonMark and GFM (GitHub Flavored Markdown) standards and adds extensions on top. This has two important implications: everything you know about standard Markdown works here, and Obsidian's extensions are powerful inside the vault but do not render in other tools. The underlying file always remains plain .md — intact if you open it in any text editor.
 
-Wikilinks — el corazón del grafo 
-[[Nota destino]] → link simple [[Nota destino#Sección]] → link a heading [[Nota destino|Texto visible]] → link con alias ![[Nota destino]] → embed completo ![[Nota destino#Sección]] → embed de sección ![[imagen.png|300]] → imagen con ancho # Block references Este párrafo tiene un ID único. ^bloque-id # Desde otra nota: [[MiNota#^bloque-id]] 
+Standard Markdown — 100% portable
+# Headings H1–H6, Bold, Italic, Strikethrough **bold** *italic* ~~strikethrough~~ ==highlight== # Code `inline code`
+```language
+code block
+``` # Tables, lists, checkboxes - [ ] pending task
+- [x] completed task # Links and footnotes [external text](https://url.com)
+[^1]: footnote
 
-Callouts — críticos para notas estructuradas que lee la IA 
-> [!note] Título opcional > Información > [!warning] Advertencia > [!danger] Peligro crítico > [!tip] Consejo > [!info] Información # Plegable (+= empieza expandido, -= empieza colapsado) > [!faq]+ Pregunta frecuente > [!faq]- Colapsado por default # Tipos disponibles: note, tip, warning, danger, info, abstract, todo,
-success, question, failure, bug, example, quote 
 
-Frontmatter YAML — el más crítico para IA 
---- tags: [proyecto, activo] fecha: 2026-04-27 tipo: decision status: vigente autor: human verificado: true relacionado: [[Sprint-03]], [[Concepto-X]] --- # Comentarios ocultos — invisibles al leer, visibles para IA en raw %% Instrucción solo para el agente: actualizar este campo mensualmente %% 
+### Obsidian-exclusive extensions
 
-Mermaid — diagramas nativos sin plugins 
+These are what make the vault special for AI brains. The agent must know them to write notes correctly (hence the importance of Obsidian Skills, covered in Part III).
+
+Wikilinks — the heart of the graph
+[[Target note]] → simple link [[Target note#Section]] → link to heading [[Target note|Visible text]] → link with alias ![[Target note]] → full embed ![[Target note#Section]] → section embed ![[image.png|300]] → image with width # Block references This paragraph has a unique ID. ^block-id # From another note: [[MyNote#^block-id]]
+
+Callouts — critical for structured notes read by AI
+> [!note] Optional title > Information > [!warning] Warning > [!danger] Critical danger > [!tip] Tip > [!info] Information # Collapsible (+= starts expanded, -= starts collapsed) > [!faq]+ Frequently asked question > [!faq]- Collapsed by default # Available types: note, tip, warning, danger, info, abstract, todo,
+success, question, failure, bug, example, quote
+
+Frontmatter YAML — the most critical for AI
+--- tags: [project, active] date: 2026-04-27 type: decision status: active author: human verified: true related: [[Sprint-03]], [[Concept-X]] --- # Hidden comments — invisible when reading, visible to AI in raw %% Agent-only instruction: update this field monthly %%
+
+Mermaid — native diagrams without plugins
 ```mermaid
 flowchart TD
- A[Fuente raw] --> B[Agente compila]
- B --> C[Wiki estructurada]
- C --> D[Consulta con contexto]
- D --> E[Respuesta fundamentada]
-``` 
+ A[Raw source] --> B[Agent compiles]
+ B --> C[Structured wiki]
+ C --> D[Query with context]
+ D --> E[Grounded response]
+```
 
 
-### Arquitectura de vaults: la decisión más importante 
+### Vault architecture: the most important decision
 
-La pregunta de si usar múltiples vaults separados o un solo vault con zonas es la decisión arquitectónica más importante antes de construir cualquier cerebro de IA. La respuesta que emerge de la investigación es clara. 
+The question of whether to use multiple separate vaults or a single vault with zones is the most important architectural decision before building any AI brain. The answer that emerges from the research is clear.
 
-ℹ️ La verdad incómoda sobre los wikilinks: Los Internal Links no se comparten entre vaults. Un [[wikilink]] solo funciona dentro del vault donde fue creado. Esta es una decisión de diseño intencional de Obsidian, no un bug. 
+ℹ️ The uncomfortable truth about wikilinks: Internal Links are not shared between vaults. A [[wikilink]] only works inside the vault where it was created. This is an intentional design decision by Obsidian, not a bug.
 
-Un vault único con zonas — RECOMENDADO para IA 
+Single vault with zones — RECOMMENDED for AI
 
-Los wikilinks entre zonas funcionan nativamente 
+Wikilinks between zones work natively
 
-El agente ve todo el grafo en una sola sesión 
+The agent sees the entire graph in a single session
 
-El nodo padre puede referenciar cualquier nota 
+The parent node can reference any note
 
-Principio MECE: carpetas mutuamente excluyentes y colectivamente exhaustivas 
+MECE principle: mutually exclusive and collectively exhaustive folders
 
 
-Múltiples vaults — solo en casos específicos 
+Multiple vaults — only in specific cases
 
-Datos de diferentes niveles de confidencialidad 
+Data at different confidentiality levels
 
-Equipos colaborativos con vaults compartidos 
+Collaborative teams with shared vaults
 
-Plugins incompatibles entre proyectos 
+Incompatible plugins between projects
 
-Vault con 10,000+ notas donde el grafo se vuelve lento 
+Vault with 10,000+ notes where the graph becomes slow
 
 
-Para conectar vaults cuando sea necesario, Obsidian ofrece el protocolo URI oficial: 
+To connect vaults when necessary, Obsidian offers the official URI protocol:
 
-Obsidian URI — conexión entre vaults 
-# Abrir una nota en otro vault obsidian://open?vault=nombre-vault&file=ruta/nota # Link navegable dentro de una nota [Ver nota en otro vault] (obsidian://open?vault=vault-b&file=conceptos/LFT) # Ir a heading específico en otro vault obsidian://open?vault=dev&file=Sprint-04#Decisiones 
+Obsidian URI — connecting vaults
+# Open a note in another vault obsidian://open?vault=vault-name&file=path/note # Navigable link inside a note [See note in other vault](obsidian://open?vault=vault-b&file=concepts/LFT) # Go to specific heading in another vault obsidian://open?vault=dev&file=Sprint-04#Decisions
 
 
-### Estructura de vault recomendada para cerebros de IA 
+### Recommended vault structure for AI brains
 
-Estructura MECE del vault 
-vault/ ├── CLAUDE.md ← constitución del agente (leer Parte III) ├── AGENTS.md ← para Codex CLI / Cursor / Windsurf ├── GEMINI.md ← para Gemini CLI ├── .claudeignore ← excluye templates, attachments │
-├── 00-meta/ ← índice maestro, decisiones globales │ ├── indice-maestro.md
-│ └── decisiones-globales.md
-├── 10-zona-a/ ← primer dominio (dev, trabajo, estudio…) │ └── CLAUDE-a.md ← instrucciones específicas de la zona ├── 20-zona-b/ ← segundo dominio ├── 30-zona-c/ ← tercer dominio ├── 40-inbox/ ← captura rápida sin clasificar ├── 50-archivo/ ← cerrado / histórico │
-├── _agent/ ← zona exclusiva del agente │ ├── working/ ← memoria de trabajo (hot cache) │ ├── episodic/ ← log de sesiones pasadas │ └── skills/ ← skills versionadas │
-├── templates/ ← NUNCA modificar manualmente └── attachments/ ← imágenes y archivos adjuntos 
+MECE vault structure
+vault/ ├── CLAUDE.md ← agent constitution (read Part III) ├── AGENTS.md ← for Codex CLI / Cursor / Windsurf ├── GEMINI.md ← for Gemini CLI ├── .claudeignore ← excludes templates, attachments │
+├── 00-meta/ ← master index, global decisions │ ├── master-index.md
+│ └── global-decisions.md
+├── 10-zone-a/ ← first domain (dev, work, study…) │ └── CLAUDE-a.md ← zone-specific instructions ├── 20-zone-b/ ← second domain ├── 30-zone-c/ ← third domain ├── 40-inbox/ ← quick capture unclassified ├── 50-archive/ ← closed / historical │
+├── _agent/ ← agent-exclusive zone │ ├── working/ ← working memory (hot cache) │ ├── episodic/ ← past session log │ └── skills/ ← versioned skills │
+├── templates/ ← NEVER modify manually └── attachments/ ← images and attached files
 
 
-Parte III 
+Part III
 
-## El Contrato con la IA: CLAUDE.md y Obsidian Skills 
+## The AI Contract: CLAUDE.md and Obsidian Skills
 
-El archivo más importante del vault. Cómo escribirlo para que cualquier IA entienda el sistema, y las skills oficiales del CEO de Obsidian que corrigen el output de los agentes. 
+The most important file in the vault. How to write it so any AI understands the system, and the official skills from the CEO of Obsidian that correct agent output.
 
 
-### ¿Qué es el CLAUDE.md? 
+### What is CLAUDE.md?
 
-Claude Code es brillante pero olvidadizo. Cada conversación empieza desde cero. El CLAUDE.md no es documentación — es un manual de instrucciones para el asistente . Claude Code lo lee automáticamente cada vez que inicias una sesión desde el directorio del vault. No lo escribas como documentación técnica. Escríbelo como si estuvieras haciendo el onboarding de un empleado nuevo: dile quién eres, en qué estás trabajando, dónde encontrar las cosas y cómo quieres que se comporte. 
+Claude Code is brilliant but forgetful. Every conversation starts from zero. CLAUDE.md is not documentation — it is an instruction manual for the assistant. Claude Code reads it automatically every time you start a session from the vault directory. Do not write it as technical documentation. Write it as if you were onboarding a new employee: tell it who you are, what you are working on, where to find things, and how you want it to behave.
 
-Una advertencia importante de investigación: un estudio publicado en 2025 encontró que los archivos de contexto generados por LLM de una sola vez tienden a disminuir el rendimiento del agente. El problema no es el CLAUDE.md en sí — es cuando se genera estático con /init y nunca se actualiza. Un CLAUDE.md que evoluciona junto con el vault, actualizado por el agente al final de cada sesión, es radicalmente distinto. 
+An important research warning: a study published in 2025 found that LLM-generated context files created all at once tend to decrease agent performance. The problem is not CLAUDE.md itself — it is when it is generated statically with /init and never updated. A CLAUDE.md that evolves alongside the vault, updated by the agent at the end of each session, is radically different.
 
-Si el CLAUDE.md supera las 500 líneas, lo estás usando como vault. Mueve el contenido real a una carpeta /context/ y referencíalo desde el CLAUDE.md. 
+If CLAUDE.md exceeds 500 lines, you are using it as a vault. Move actual content to a /context/ folder and reference it from CLAUDE.md.
 
-CLAUDE.md — plantilla de 8 secciones 
-# CLAUDE.md — Instrucciones para el Agente ## 1. Quién soy y qué es este vault # Descripción breve. Quién eres, para qué sirve el vault. ## 2. Mapa de estructura # El agente NO debe adivinar la estructura — dísela explícitamente - 00-meta/ → índice maestro, decisiones globales
-- 10-dev/ → [descripción de tu zona]
-- _agent/ → zona del agente (working, episodic, skills)
-- templates/ → NO modificar ## 3. Convenciones de nomenclatura - Archivos: kebab-case → mi-nota.md - Fechas: ISO 8601 → 2026-04-27-reunion.md - Decisiones: → DEC-001-nombre.md ## 4. Frontmatter obligatorio # Define qué propiedades debe incluir cada tipo de nota ## 5. Reglas de comportamiento - SIEMPRE buscar nota existente ANTES de crear nueva
-- NUNCA modificar archivos en templates/ ni 50-archivo/ - SIEMPRE agregar author-type: agent en notas que crees
-- Al inicio de sesión: leer _agent/working/hot-cache.md primero
-- Al final de sesión: actualizar _agent/working/hot-cache.md ## 6. Proyectos activos # Lista corta — actualizar mensualmente ## 7. Preferencias de respuesta # Idioma, tono, nivel de detalle, preferencias de formato ## 8. Hot cache Orden de consulta al inicio de sesión:
-1. Leer _agent/working/hot-cache.md (~500 tokens)
-2. Si no basta: leer 00-meta/indice-maestro.md (~1,000 tokens)
-3. Solo entonces buscar en carpetas específicas 
+CLAUDE.md — 8-section template
+# CLAUDE.md — Agent Instructions ## 1. Who I am and what this vault is # Brief description. Who you are, what the vault is for. ## 2. Structure map # The agent must NOT guess the structure — tell it explicitly - 00-meta/ → master index, global decisions
+- 10-dev/ → [description of your zone]
+- _agent/ → agent zone (working, episodic, skills)
+- templates/ → DO NOT modify ## 3. Naming conventions - Files: kebab-case → my-note.md - Dates: ISO 8601 → 2026-04-27-meeting.md - Decisions: → DEC-001-name.md ## 4. Required frontmatter # Define which properties each note type must include ## 5. Behavior rules - ALWAYS search for existing note BEFORE creating new one
+- NEVER modify files in templates/ or 50-archive/ - ALWAYS add author-type: agent to notes you create
+- At session start: read _agent/working/hot-cache.md first
+- At session end: update _agent/working/hot-cache.md ## 6. Active projects # Short list — update monthly ## 7. Response preferences # Language, tone, detail level, format preferences ## 8. Hot cache Query order at session start:
+1. Read _agent/working/hot-cache.md (~500 tokens)
+2. If insufficient: read 00-meta/master-index.md (~1,000 tokens)
+3. Only then search in specific folders
 
 
-### Las Obsidian Skills oficiales: el hallazgo más importante 
+### The official Obsidian Skills: the most important finding
 
-Este es el dato más relevante de toda la investigación sobre el tema de IA + Obsidian: Claude Code no conoce los formatos de archivo propietarios de Obsidian por defecto. Cuando crea una nota, puede romper la sintaxis de los wikilinks. Cuando edita un archivo .base , puede generar JSON inválido. Cuando escribe un archivo .canvas , el output puede no abrir en Obsidian. 
+This is the most relevant finding in all the research on AI + Obsidian: Claude Code does not know Obsidian's proprietary file formats by default. When it creates a note, it can break wikilink syntax. When it edits a .base file, it can generate invalid JSON. When it writes a .canvas file, the output may not open in Obsidian.
 
-En enero de 2026, Kepano (Steph Ango, CEO de Obsidian) publicó un conjunto oficial de skills para Claude Code. El repositorio kepano/obsidian-skills es MIT-licensed. Las skills no son plugins — son libros de reglas portables en formato texto que tú controlas. 
+In January 2026, Kepano (Steph Ango, CEO of Obsidian) published an official set of skills for Claude Code. The kepano/obsidian-skills repository is MIT-licensed. Skills are not plugins — they are portable rule books in text format that you control.
 
 
-Skill 
+Skill
 
-Qué enseña al agente 
+What it teaches the agent
 
-Invocar con 
+Invoke with
 
-obsidian-markdown 
+obsidian-markdown
 
-Toda la sintaxis OFM: wikilinks, callouts, propiedades YAML, embeds, Mermaid, LaTeX. La más importante. 
+All OFM syntax: wikilinks, callouts, YAML properties, embeds, Mermaid, LaTeX. The most important.
 
-/obsidian-markdown 
+/obsidian-markdown
 
-obsidian-bases 
+obsidian-bases
 
-El formato de base de datos .base con vistas filtradas y fórmulas. Reemplaza a Dataview para agentes. 
+The .base database format with filtered views and formulas. Replaces Dataview for agents.
 
-/obsidian-bases 
+/obsidian-bases
 
-json-canvas 
+json-canvas
 
-El schema JSON Canvas para mapas espaciales de notas. Permite crear y editar canvas programáticamente. 
+The JSON Canvas schema for spatial note maps. Allows creating and editing canvas files programmatically.
 
-/json-canvas 
+/json-canvas
 
-defuddle 
+defuddle
 
-Extrae páginas web a Markdown limpio antes de guardar. Reduce costo de tokens eliminando anuncios y chrome. 
+Extracts web pages to clean Markdown before saving. Reduces token cost by removing ads and chrome.
 
-/defuddle 
+/defuddle
 
-obsidian-cli 
+obsidian-cli
 
-Interacción con vaults vía CLI: leer, crear, buscar, gestionar notas y propiedades desde terminal. 
+Vault interaction via CLI: read, create, search, manage notes and properties from terminal.
 
-/obsidian-cli 
+/obsidian-cli
 
-Instalación de Obsidian Skills 
-# Instalar todas las skills oficiales npx skills add kepano/obsidian-skills # Invocar en sesión antes de crear/editar notas: /obsidian-markdown → antes de crear o editar notas .md /obsidian-bases → antes de trabajar con archivos .base /json-canvas → antes de crear canvas visuales /defuddle → antes de guardar contenido web al vault 
+Installing Obsidian Skills
+# Install all official skills npx skills add kepano/obsidian-skills # Invoke in session before creating/editing notes: /obsidian-markdown → before creating or editing .md notes /obsidian-bases → before working with .base files /json-canvas → before creating visual canvas /defuddle → before saving web content to vault
 
 
-### Equivalencias para otras IAs 
+### Equivalents for other AIs
 
-El CLAUDE.md es nativo de Claude Code, pero el principio aplica a cualquier IA. La tabla de equivalencias: 
+CLAUDE.md is native to Claude Code, but the principle applies to any AI. The equivalency table:
 
 
-Herramienta 
+Tool
 
-Archivo equivalente 
+Equivalent file
 
-Cómo se carga 
+How it loads
 
-Claude Code 
+Claude Code
 
-CLAUDE.md 
+CLAUDE.md
 
-Automático al iniciar desde el directorio del vault 
+Automatic on launch from vault directory
 
-Codex CLI / Cursor / Windsurf 
+Codex CLI / Cursor / Windsurf
 
-AGENTS.md 
+AGENTS.md
 
-Mismo contenido, diferente nombre de archivo 
+Same content, different filename
 
-Gemini CLI 
+Gemini CLI
 
-GEMINI.md 
+GEMINI.md
 
-Leído automáticamente por Gemini CLI 
+Read automatically by Gemini CLI
 
-Claude.ai (chat) 
+Claude.ai (chat)
 
-Cualquier .md 
+Any .md
 
-Manual: adjuntar al inicio de la conversación 
+Manual: attach at start of conversation
 
-ChatGPT 
+ChatGPT
 
-Custom Instructions 
+Custom Instructions
 
-Pegar en Settings → Custom Instructions 
+Paste in Settings → Custom Instructions
 
-Modelos locales (Ollama) 
+Local models (Ollama)
 
-Cualquier .txt o .md 
+Any .txt or .md
 
-Manual: incluir en el system prompt 
+Manual: include in system prompt
 
 
-Parte IV 
+Part IV
 
-## Stack de Plugins para Cerebros de IA 
+## Plugin Stack for AI Brains
 
-De los 2,700+ plugins disponibles, cuáles realmente importan para un vault diseñado para ser leído y escrito por agentes de IA. 
+Of the 2,700+ available plugins, which ones actually matter for a vault designed to be read and written by AI agents.
 
-⚠️ El problema crítico con Dataview: Dataview genera resultados en vivo dentro de Obsidian, pero no escribe nada en los archivos Markdown reales. Esto significa que la IA lee el código de la query, no los resultados. Para vaults con agentes, usar Bases (nativo desde Obsidian 1.8) que sí escribe en archivo, o Dataview Serializer para exportar resultados a Markdown estático. 
+⚠️ The critical problem with Dataview: Dataview generates live results inside Obsidian, but writes nothing to the actual Markdown files. This means the AI reads the query code, not the results. For vaults with agents, use Bases (native since Obsidian 1.8) which does write to file, or Dataview Serializer to export results to static Markdown.
 
 
-### Los tres grupos funcionales 
+### The three functional groups
 
 
-Plugin 
+Plugin
 
-Grupo 
+Group
 
-Qué hace para la IA 
+What it does for AI
 
-Prioridad 
+Priority
 
-Obsidian Git 
+Obsidian Git
 
-Infraestructura 
+Infrastructure
 
-Backup automático + historial de cambios. Si el agente arruina algo, git checkout . revierte. Prerequisito absoluto antes de conectar cualquier agente con escritura. 
+Automatic backup + change history. If the agent breaks something, git checkout . reverts. Absolute prerequisite before connecting any write-capable agent.
 
-Crítico 
+Critical
 
-Linter 
+Linter
 
-Infraestructura 
+Infrastructure
 
-Auto-formatea notas al guardar. Garantiza frontmatter consistente sin depender de disciplina manual. Sin Linter, el vault acumula inconsistencias que confunden al agente. 
+Auto-formats notes on save. Guarantees consistent frontmatter without relying on manual discipline. Without Linter, the vault accumulates inconsistencies that confuse the agent.
 
-Crítico 
+Critical
 
-Templater 
+Templater
 
-Estructura 
+Structure
 
-Templates dinámicos con fecha automática y lógica. Cuando el agente instancia templates, el resultado siempre tiene los campos correctos. 
+Dynamic templates with automatic dates and logic. When the agent instantiates templates, the result always has the correct fields.
 
-Alta 
+High
 
-Bases (nativo 1.8+) 
+Bases (native 1.8+)
 
-Estructura 
+Structure
 
-Vistas de base de datos filtradas en archivos .base . A diferencia de Dataview, los agentes pueden leer, interpretar y modificar estos archivos. 
+Filtered database views in .base files. Unlike Dataview, agents can read, interpret, and modify these files.
 
-Alta 
+High
 
-Metadata Menu 
+Metadata Menu
 
-Estructura 
+Structure
 
-Define exactamente qué propiedades puede tener cada tipo de nota. El agente no puede inventar valores fuera del conjunto permitido. 
+Defines exactly which properties each note type can have. The agent cannot invent values outside the allowed set.
 
-Alta 
+High
 
-QuickAdd 
+QuickAdd
 
-Estructura 
+Structure
 
-Captura rápida con un atajo. El inbox nunca se desborda porque la clasificación inicial es automática. 
+Quick capture with a keyboard shortcut. The inbox never overflows because initial classification is automatic.
 
-Alta 
+High
 
-Smart Connections 
+Smart Connections
 
-IA interna 
+Internal AI
 
-Embeddings locales sin API key. Chat semántico con el vault. Las notas nunca salen de tu máquina. 
+Local embeddings without API key. Semantic chat with the vault. Notes never leave your machine.
 
-Media-alta 
+Medium-high
 
-Copilot for Obsidian 
+Copilot for Obsidian
 
-IA interna 
+Internal AI
 
-Q&A sobre el vault con Claude, GPT, Gemini o modelos locales via Ollama. 
+Q&A about the vault with Claude, GPT, Gemini, or local models via Ollama.
 
-Media 
+Medium
 
-Web Clipper (extensión) 
+Web Clipper (extension)
 
-Captura 
+Capture
 
-Guarda artículos web directamente al vault como Markdown limpio con un clic. 
+Saves web articles directly to the vault as clean Markdown with one click.
 
-Alta para ingesta 
+High for ingestion
 
-Excalidraw 
+Excalidraw
 
-Visual 
+Visual
 
-Diagramas embebidos directamente en notas. Arquitectura y mapas conceptuales junto al texto. 
+Diagrams embedded directly in notes. Architecture and concept maps alongside text.
 
-Media 
+Medium
 
-Local REST API 
+Local REST API
 
-Conexión 
+Connection
 
-Expone el vault como API local en puerto 27124. Necesario para la Ruta B (Claude Desktop + MCP via REST). 
+Exposes the vault as a local API on port 27124. Required for Route B (Claude Desktop + MCP via REST).
 
-Solo Ruta B 
+Route B only
 
-InfraNodus 
+InfraNodus
 
-Análisis 
+Analysis
 
-Visualización 3D del grafo de conocimiento con métricas reales de ciencia de redes (betweenness centrality, detección de comunidades). Identifica gaps estructurales entre clusters temáticos y genera preguntas de investigación para cerrarlos. El plugin gratuito funciona desde el primer momento; suscripción para extender cuota de IA. 
+3D visualization of the knowledge graph with real network science metrics (betweenness centrality, community detection). Identifies structural gaps between thematic clusters and generates research questions to close them. The free plugin works from day one; subscription to extend AI quota.
 
-Media — Análisis profundo 
+Medium — Deep analysis
 
 
-### Actualización 2026: el CLI oficial como alternativa a MCP server 
+### 2026 update: the official CLI as alternative to MCP server
 
-Desde la versión 1.12.4 (27 febrero 2026), Obsidian incluye un CLI oficial gratuito para todos los usuarios, sin suscripción ni licencia especial. Este cambio modifica el stack de conexión recomendado: el CLI es ahora la forma más directa de dar acceso a agentes al vault para operaciones básicas, sin necesidad de configurar un servidor MCP. 
+Since version 1.12.4 (February 27, 2026), Obsidian includes a free official CLI for all users, without subscription or special license. This change modifies the recommended connection stack: the CLI is now the most direct way to give agents vault access for basic operations, without needing to configure an MCP server.
 
 
-Método 
+Method
 
-Qué conoce del vault 
+Vault knowledge
 
-Requiere Obsidian abierto 
+Requires Obsidian open
 
-Configuración 
+Setup
 
-Ideal para 
+Best for
 
-Filesystem directo 
-Claude Code apunta a carpeta 
+Direct filesystem
+Claude Code points to folder
 
-~40% — solo Markdown crudo 
+~40% — raw Markdown only
 
-No 
+No
 
-Cero 
+Zero
 
-Inicio rápido, sesiones de trabajo 
+Quick start, work sessions
 
-CLI oficial 
-obsidian search, move, backlinks 
+Official CLI
+obsidian search, move, backlinks
 
-~85% — búsqueda indexada + grafo + templates 
+~85% — indexed search + graph + templates
 
-Sí (lanza automático) 
+Yes (auto-launches)
 
-Settings → General → Register CLI 
+Settings → General → Register CLI
 
-Agentes que necesitan búsqueda semántica y operaciones de grafo sin MCP 
+Agents that need semantic search and graph operations without MCP
 
-MCP server (REST API) 
-mcp-obsidian + Local REST API plugin 
+MCP server (REST API)
+mcp-obsidian + Local REST API plugin
 
-~55% — búsqueda + metadata 
+~55% — search + metadata
 
-Sí 
+Yes
 
-Plugin + claude_desktop_config.json 
+Plugin + claude_desktop_config.json
 
-Claude Desktop sin terminal 
+Claude Desktop without terminal
 
-MCP plugin nativo 
-aaronsb/obsidian-mcp-plugin (beta) 
+Native MCP plugin
+aaronsb/obsidian-mcp-plugin (beta)
 
-~95% — APIs internas + graph traversal 
+~95% — internal APIs + graph traversal
 
-Sí 
+Yes
 
-BRAT (beta) 
+BRAT (beta)
 
-Grafos densos de entidades interconectadas 
+Dense graphs of interconnected entities
 
-CLI oficial — comandos clave para agentes 
-# Habilitar en Obsidian: Settings → General → Command line interface → Register CLI # Versión mínima requerida: 1.12.4 (gratuita, sin licencia especial) obsidian search query= "authentication decision" # búsqueda semántica indexada obsidian daily # abrir nota del día obsidian daily:append content= "Pending task" # agregar sin abrir app obsidian create --title= "ADR: New API" # crear nota obsidian move file= "Inbox/memo" to= "Archive/" # mover (actualiza wikilinks) obsidian orphans # notas sin backlinks obsidian backlinks file= "nota.md" # backlinks de una nota obsidian files --vault=my-vault # listar archivos # En CLAUDE.md: instruir al agente a usar el CLI # "Use `obsidian` CLI for vault queries instead of grep/find." # "Prefer `obsidian search` over filesystem scanning." 
+Official CLI — key commands for agents
+# Enable in Obsidian: Settings → General → Command line interface → Register CLI # Minimum version required: 1.12.4 (free, no special license) obsidian search query="authentication decision" # indexed semantic search obsidian daily # open today's note obsidian daily:append content="Pending task" # append without opening app obsidian create --title="ADR: New API" # create note obsidian move file="Inbox/memo" to="Archive/" # move (updates wikilinks) obsidian orphans # notes without backlinks obsidian backlinks file="note.md" # backlinks for a note obsidian files --vault=my-vault # list files # In CLAUDE.md: instruct the agent to use the CLI # "Use `obsidian` CLI for vault queries instead of grep/find." # "Prefer `obsidian search` over filesystem scanning."
 
-ℹ️ NotesMD CLI — alternativa headless: Para servidores sin interfaz gráfica o entornos containerizados donde Obsidian no puede correr, existe NotesMD CLI (antes llamado "obsidian-cli" de comunidad, renombrado para evitar confusión con el CLI oficial). Funciona sin Obsidian corriendo — solo lee y escribe archivos .md directamente. Ideal para pipelines de CI, servidores de automatización, o scripts que corren sin GUI. Instalar con: npm install -g notesmd-cli 
+ℹ️ NotesMD CLI — headless alternative: For servers without a graphical interface or containerized environments where Obsidian cannot run, there is NotesMD CLI (formerly called "obsidian-cli" by the community, renamed to avoid confusion with the official CLI). Works without Obsidian running — just reads and writes .md files directly. Ideal for CI pipelines, automation servers, or scripts running without GUI. Install with: npm install -g notesmd-cli
 
-La señal más importante: El CEO de una herramienta de productividad construyó skills oficiales para su propio producto, y luego la herramienta incorporó un CLI oficial gratuito. Obsidian está evolucionando de app de notas a sistema operativo de conocimiento programable . El CLI marca ese punto de inflexión. 
+The most important signal: The CEO of a productivity tool built official skills for his own product, and then the tool incorporated a free official CLI. Obsidian is evolving from a note-taking app to a programmable knowledge operating system. The CLI marks that inflection point.
 
-Parte V 
+Part V
 
-## MCP Servers para Obsidian: El Ecosistema Completo 
+## MCP Servers for Obsidian: The Complete Ecosystem
 
-Los servidores MCP son la capa técnica que hace posible que Claude Desktop, Claude Code, Cursor, Gemini CLI y cualquier cliente MCP-compatible lean y escriban en tu vault sin copiar y pegar contexto manualmente. 
+MCP servers are the technical layer that makes it possible for Claude Desktop, Claude Code, Cursor, Gemini CLI, and any MCP-compatible client to read and write to your vault without manually copying and pasting context.
 
 
-### ¿Qué es un MCP server para Obsidian? 
+### What is an MCP server for Obsidian?
 
-Un MCP server para Obsidian traduce peticiones del protocolo MCP en operaciones del vault: leer archivos markdown, buscar contenido, gestionar frontmatter y organizar tags. El agente ve tu vault como una API estructurada, no como un montón de archivos. La diferencia práctica con respecto a Claude Code apuntando directamente a la carpeta es que el MCP server expone el vault a cualquier cliente MCP — no solo Claude Code desde terminal. 
+An MCP server for Obsidian translates MCP protocol requests into vault operations: reading markdown files, searching content, managing frontmatter, and organizing tags. The agent sees your vault as a structured API, not a pile of files. The practical difference compared to Claude Code pointing directly at the folder is that the MCP server exposes the vault to any MCP client — not just Claude Code from the terminal.
 
-La investigación identifica tres campos arquitectónicos con enfoques radicalmente distintos: 
+The research identifies three architectural camps with radically different approaches:
 
-CAMPO 01 
-Filesystem Directo 
-Sin plugins 
+CAMP 01
+Direct Filesystem
+No plugins
 
-Lee archivos .md directamente desde el sistema de archivos. Obsidian no necesita estar abierto. No requiere API key. Configuración mínima: solo la ruta del vault. Representantes: obsidian-mcp (multi-vault nativo), mcpvault (con seguridad integrada y respuestas 40-60% más compactas), obsidian-brain (búsqueda semántica híbrida BM25 + embeddings en SQLite local). 
+Reads .md files directly from the filesystem. Obsidian does not need to be open. No API key required. Minimal configuration: just the vault path. Representatives: obsidian-mcp (native multi-vault), mcpvault (with built-in security and 40-60% more compact responses), obsidian-brain (hybrid BM25 + embeddings semantic search in local SQLite).
 
-CAMPO 02 
-REST API 
-Plugin requerido 
+CAMP 02
+REST API
+Plugin required
 
-Requiere el plugin Local REST API de coddingtonbear y que Obsidian esté abierto . Obsidian media todas las operaciones — más seguro para escrituras. Puerto por defecto: 27124 (HTTPS). Representantes: mcp-obsidian (el más usado), obsidian-mcp-server (con cache inteligente), obsidian-mcp-server-enhanced (fork con Tailscale para acceso remoto). 
+Requires coddingtonbear's Local REST API plugin and Obsidian must be open. Obsidian mediates all operations — safer for writes. Default port: 27124 (HTTPS). Representatives: mcp-obsidian (most used), obsidian-mcp-server (with smart cache), obsidian-mcp-server-enhanced (fork with Tailscale for remote access).
 
-CAMPO 03 
-Plugin Nativo 
-Acceso a APIs internas 
+CAMP 03
+Native Plugin
+Internal API access
 
-El único que corre dentro de Obsidian como plugin nativo. Tiene acceso a las APIs internas: knowledge graph, queries de Dataview, link traversal, análisis de backlinks . Puede navegar el grafo de entidades de forma inteligente. Representante: obsidian-mcp-plugin de aaronsb. Estado: beta, instalar via BRAT. Cuando salga de beta, será la opción preferida para vaults densamente interconectados. 
+The only one that runs inside Obsidian as a native plugin. Has access to internal APIs: knowledge graph, Dataview queries, link traversal, backlink analysis. Can navigate the entity graph intelligently. Representative: obsidian-mcp-plugin by aaronsb. Status: beta, install via BRAT. When it exits beta, it will be the preferred option for densely interconnected vaults.
 
 
-Servidor 
+Server
 
-Campo 
+Camp
 
-Obsidian abierto 
+Obsidian open
 
-Plugin 
+Plugin
 
-Multi-vault 
+Multi-vault
 
-Semántica 
+Semantic
 
-Grafo 
+Graph
 
-obsidian-mcp 
+obsidian-mcp
 
-Filesystem 
+Filesystem
 
-No 
+No
 
-No 
+No
 
-✓ nativo 
+✓ native
 
-✗ 
+✗
 
-✗ 
+✗
 
-mcpvault 
+mcpvault
 
-Filesystem 
+Filesystem
 
-No 
+No
 
-No 
+No
 
-✗ 
+✗
 
-✗ 
+✗
 
-✗ 
+✗
 
-obsidian-brain 
+obsidian-brain
 
-Filesystem 
+Filesystem
 
-No 
+No
 
-Opcional 
+Optional
 
-✗ 
+✗
 
-✓ híbrida 
+✓ hybrid
 
-básico 
+basic
 
-mcp-obsidian 
+mcp-obsidian
 
-REST API 
+REST API
 
-Sí 
+Yes
 
-Sí 
+Yes
 
-✗ 
+✗
 
-✗ 
+✗
 
-✗ 
+✗
 
-obsidian-mcp-plugin 
+obsidian-mcp-plugin
 
-Nativo 
+Native
 
-Sí 
+Yes
 
-El mismo 
+Built-in
 
-✗ 
+✗
 
-✓ 
+✓
 
-✓ avanzado 
+✓ advanced
 
-🔴 Advertencia de seguridad crítica: Conectar un LLM a tu vault via MCP le otorga acceso completo de lectura/escritura/eliminación. Mejores prácticas: (1) Git en el vault antes de conectar cualquier servidor — si el agente hace cambios incorrectos, git revert recupera todo. (2) Empezar en modo solo-lectura. (3) Apuntar el servidor a un subdirectorio si el vault tiene notas personales mezcladas. (4) Para datos confidenciales, preferir servidores filesystem locales donde el contenido no sale de la máquina. 
+🔴 Critical security warning: Connecting an LLM to your vault via MCP grants full read/write/delete access. Best practices: (1) Git in the vault before connecting any server — if the agent makes wrong changes, git revert recovers everything. (2) Start in read-only mode. (3) Point the server at a subdirectory if the vault has personal notes mixed in. (4) For confidential data, prefer local filesystem servers where content does not leave your machine.
 
 
-### Recomendación por caso de uso 
+### Recommendation by use case
 
-- Para empezar hoy con Claude Code: No necesitas MCP server. Claude Code apunta directamente a la carpeta del vault. Cero configuración adicional. 
+- To start today with Claude Code: No MCP server needed. Claude Code points directly to the vault folder. Zero additional configuration.
 
-- Para usar Claude Desktop también: mcpvault — sin plugins, sin API key, con seguridad integrada. 
+- To also use Claude Desktop: mcpvault — no plugins, no API key, with built-in security.
 
-- Para vault con entidades muy interconectadas: obsidian-mcp-plugin cuando salga de beta — es el único que puede navegar conexiones de forma inteligente. 
+- For vault with highly interconnected entities: obsidian-mcp-plugin when it exits beta — it is the only one that can navigate connections intelligently.
 
 
-Parte VI 
+Part VI
 
-## Arquitectura de Memoria en Capas 
+## Layered Memory Architecture
 
-Lo que separa un segundo cerebro genuino de un motor de búsqueda sofisticado: las tres capas de memoria y cómo se comunican. 
+What separates a genuine second brain from a sophisticated search engine: the three memory layers and how they communicate.
 
 
-### El problema que resuelven las capas 
+### The problem the layers solve
 
-Sin capas, todos los agentes cometen el mismo error: mezclan inputs crudos, resúmenes y outputs en un solo lugar. El resultado es un vault que el agente no puede navegar eficientemente — tiene que leer todo o adivinar qué leer. La arquitectura de memoria en capas es lo que hace que el costo de tokens no escale linealmente con el tamaño del vault. 
+Without layers, all agents make the same mistake: they mix raw inputs, summaries, and outputs in one place. The result is a vault the agent cannot navigate efficiently — it has to read everything or guess what to read. The layered memory architecture is what keeps token cost from scaling linearly with vault size.
 
-CAPA 01 
-Working Memory 
-_agent/working/ 
+LAYER 01
+Working Memory
+_agent/working/
 
-Memoria de trabajo — vida útil: días. Contiene el estado actual: proyectos activos, tareas abiertas, decisiones pendientes, contexto de la sesión en curso. Se reescribe o descarta frecuentemente. El archivo más importante: hot-cache.md (~500 palabras, siempre cargado). Incluye también session-actual.md y tareas-abiertas.md . 
+Working memory — lifespan: days. Contains current state: active projects, open tasks, pending decisions, current session context. Frequently rewritten or discarded. The most important file: hot-cache.md (~500 words, always loaded). Also includes current-session.md and open-tasks.md.
 
-CAPA 02 
-Episodic Memory 
-_agent/episodic/ 
+LAYER 02
+Episodic Memory
+_agent/episodic/
 
-El diario del agente — inmutable, solo se agrega. Registro cronológico de qué pasó, qué se decidió, qué se aprendió. Un archivo por sesión: 2026-04-27-sesion.md . Implementado via Claude Code Hooks: el Stop hook extrae insights del transcript y los escribe automáticamente al vault al terminar cada sesión. Alimenta la revisión semanal. 
+The agent's diary — immutable, append-only. Chronological record of what happened, what was decided, what was learned. One file per session: 2026-04-27-session.md. Implemented via Claude Code Hooks: the Stop hook extracts insights from the transcript and writes them automatically to the vault at the end of each session. Feeds the weekly review.
 
-CAPA 03 
-Semantic Memory 
-wiki/ 
+LAYER 03
+Semantic Memory
+wiki/
 
-El conocimiento compilado y estable — sin fecha de vencimiento. Conceptos, entidades, relaciones, la wiki. Se actualiza cuando el conocimiento evoluciona, no cuando pasa el tiempo. Todo output es derivado de la wiki, nunca tratado como fuente de verdad. Cada página debe linkar a al menos 2 páginas relacionadas. 
+Compiled, stable knowledge — no expiration date. Concepts, entities, relationships, the wiki. Updated when knowledge evolves, not when time passes. All output is derived from the wiki, never treated as source of truth. Each page must link to at least 2 related pages.
 
 
-Stop hook de Claude Code — captura automática de memoria episódica 
-// ~/.claude/settings.json { "hooks" : { "Stop" : [{ "matcher" : "" , "hooks" : [{ "type" : "command" , "command" : "python3 ~/.claude/hooks/memory_extractor.py" }]
+Claude Code Stop hook — automatic episodic memory capture
+// ~/.claude/settings.json { "hooks": { "Stop": [{ "matcher": "", "hooks": [{ "type": "command", "command": "python3 ~/.claude/hooks/memory_extractor.py" }]
  }]
  }
-} 
+}
 
 
-El script extrae del transcript de la sesión y escribe en el vault: 
+The script extracts from the session transcript and writes to the vault:
 
-- Qué pasó en la sesión 
+- What happened in the session
 
-- Decisiones tomadas 
+- Decisions made
 
-- Contexto para la próxima sesión 
+- Context for next session
 
-- Patrones observados 
+- Observed patterns
 
-### El modelo de consolidación 
+### The consolidation model
 
-Cuando se hace una query, el sistema carga tanto las memorias crudas como los insights de consolidación en el mismo prompt. El LLM razona sobre ambas capas a la vez: hechos recientes más patrones sintetizados. Así se obtienen respuestas como "mencionaste X en tres sesiones separadas y el patrón sugiere que es una prioridad alta aunque nunca la nombraste así." 
+When a query is made, the system loads both raw memories and consolidation insights into the same prompt. The LLM reasons over both layers at once: recent facts plus synthesized patterns. This produces responses like "you mentioned X in three separate sessions and the pattern suggests it is a high priority even though you never named it as such."
 
-WM 
-Working Memory 
-días 
+WM
+Working Memory
+days
 
-→ 
-EM 
-Episodic Memory 
-semanas 
+→
+EM
+Episodic Memory
+weeks
 
-→ 
-SM 
-Semantic Memory 
-permanente 
+→
+SM
+Semantic Memory
+permanent
 
 
-Heartbeat diario (5-10 min) → Revisión semanal (30-60 min). El heartbeat diario mueve conocimiento de WM a EM. La revisión semanal consolida EM a SM. Sin este ciclo, el vault acumula notas pero no aprende. 
+Daily heartbeat (5-10 min) → Weekly review (30-60 min). The daily heartbeat moves knowledge from WM to EM. The weekly review consolidates EM to SM. Without this cycle, the vault accumulates notes but does not learn.
 
-Parte VII 
+Part VII
 
-## Hot Cache y Gestión de Tokens 
+## Hot Cache and Token Management
 
-El techo práctico que más rápido limita un segundo cerebro real. Cómo evitar que el costo de tokens escale linealmente con el tamaño del vault. 
+The practical ceiling that most quickly limits a real second brain. How to prevent token cost from scaling linearly with vault size.
 
 
-### El problema: context fade y el impuesto de la apatridia 
+### The problem: context fade and the statelessness tax
 
-Sin persistencia estructurada, cada sesión de agente regenera el mismo contexto desde cero. El enfoque obvio —volcar todo el vault al inicio de la sesión— funciona hasta que tienes ~200 notas. Después estás quemando cientos de miles de tokens solo para establecer contexto, la mayoría irrelevante para la tarea actual. Además, investigación de Stanford indica que el rendimiento de IA cae entre 15-47% cuando las ventanas de contexto crecen más allá de cierto umbral. 
+Without structured persistence, every agent session regenerates the same context from scratch. The obvious approach — dumping the entire vault at the start of the session — works until you have ~200 notes. After that you are burning hundreds of thousands of tokens just to establish context, most of it irrelevant to the current task. Additionally, Stanford research indicates AI performance drops 15–47% when context windows grow beyond a certain threshold.
 
-### La solución: el hot cache 
+### The solution: the hot cache
 
-El hot cache es simplemente un archivo Markdown pequeño — _agent/working/hot-cache.md — que contiene un resumen comprimido del contexto más reciente del vault, actualizado al final de cada sesión. 
+The hot cache is simply a small Markdown file — _agent/working/hot-cache.md — that contains a compressed summary of the most recent vault context, updated at the end of each session.
 
-_agent/working/hot-cache.md — estructura 
---- tipo: working-memory actualizado: 2026-04-27T14:30:00 author-type: agent --- # Hot Cache ## Última actualización 2026-04-27 — [resumen de lo que se hizo] ## Hechos recientes más importantes - [hecho 1]
-- [hecho 2] ## Cambios recientes - Created: [[nueva-nota-1]], [[nueva-nota-2]]
-- Updated: [[nota-existente]] (se agregó X)
-- Flagged: Contradicción entre [[A]] y [[B]] sobre Y ## Hilos abiertos - Investigando: [tema en curso]
-- Pendiente: [decisión sin resolver] <!-- Mantener bajo 500 palabras.
- Es un cache, no un diario. Sobreescribir completamente. --> 
+_agent/working/hot-cache.md — structure
+--- type: working-memory updated: 2026-04-27T14:30:00 author-type: agent --- # Hot Cache ## Last update 2026-04-27 — [summary of what was done] ## Most important recent facts - [fact 1]
+- [fact 2] ## Recent changes - Created: [[new-note-1]], [[new-note-2]]
+- Updated: [[existing-note]] (added X)
+- Flagged: Contradiction between [[A]] and [[B]] about Y ## Open threads - Investigating: [ongoing topic]
+- Pending: [unresolved decision] <!-- Keep under 500 words.
+ It is a cache, not a diary. Overwrite completely. -->
 
 
-### El orden de consulta que minimiza tokens 
+### The query order that minimizes tokens
 
 
-Nivel 
+Level
 
-Archivo 
+File
 
-Costo aprox. 
+Approx. cost
 
-Cuándo cargar 
+When to load
 
-Hot cache 
+Hot cache
 
-_agent/working/hot-cache.md 
+_agent/working/hot-cache.md
 
-~500 tokens 
+~500 tokens
 
-Siempre, al inicio 
+Always, at start
 
-Índice completo 
+Full index
 
-00-meta/indice-maestro.md 
+00-meta/master-index.md
 
-~1,000 tokens 
+~1,000 tokens
 
-Si hot cache no basta 
+If hot cache insufficient
 
-Sub-índice 
+Sub-index
 
-10-zona-a/index.md 
+10-zone-a/index.md
 
-~300 tokens 
+~300 tokens
 
-Si necesita zona específica 
+If specific zone needed
 
-Nota individual 
+Individual note
 
-wiki/conceptos/X.md 
+wiki/concepts/X.md
 
-~800-2,000 tokens 
+~800-2,000 tokens
 
-Solo si índice la señala 
+Only if index signals it
 
-Vault completo 
+Full vault
 
-Todos los archivos 
+All files
 
-500,000+ tokens 
+500,000+ tokens
 
-NUNCA 
+NEVER
 
-Resultado documentado: Este sistema mantiene el uso total de contexto bajo 5,000 tokens por query, incluso para vaults con 300+ páginas. 
+Documented result: This system keeps total context use under 5,000 tokens per query, even for vaults with 300+ pages.
 
-### Sistema HOT/WARM/COLD: tiering para vaults grandes 
+### HOT/WARM/COLD system: tiering for large vaults
 
-Para vaults más allá de las 300 notas, el hot cache solo no alcanza. El sistema de tiering clasifica archivos por su relevancia temporal: 
+For vaults beyond 300 notes, the hot cache alone is not enough. The tiering system classifies files by their temporal relevance:
 
 
-Tier 
+Tier
 
-Cuándo cargar 
+When to load
 
-Ejemplos 
+Examples
 
-Tamaño típico 
+Typical size
 
-HOT 
+HOT
 
-Siempre al inicio 
+Always at start
 
-CLAUDE.md, hot-cache, tareas activas, sprint actual 
+CLAUDE.md, hot-cache, active tasks, current sprint
 
-< 5,000 tokens 
+< 5,000 tokens
 
-WARM 
+WARM
 
-Cuando el query lo requiere 
+When query requires it
 
-Decisiones técnicas activas, notas del mes en curso 
+Active technical decisions, current month's notes
 
-5,000–50,000 tokens 
+5,000–50,000 tokens
 
-COLD 
+COLD
 
-Solo si búsqueda semántica lo señala 
+Only if semantic search signals it
 
-Proyectos cerrados, notas históricas, archivo 
+Closed projects, historical notes, archive
 
-> 50,000 tokens 
+> 50,000 tokens
 
-Frontmatter para sistema de tiering 
---- tipo: nota fecha: 2026-04-27 tier: hot # hot | warm | cold status: activo author-type: human verificado: true --- 
+Frontmatter for tiering system
+--- type: note date: 2026-04-27 tier: hot # hot | warm | cold status: active author-type: human verified: true ---
 
 
-### Graphify: el caso extremo — 71.5x menos tokens 
+### Graphify: the extreme case — 71.5x fewer tokens
 
-Para codebases y vaults técnicos de gran tamaño, existe Graphify — una skill de Claude Code publicada 48 horas después del post de Karpathy. Lee tus archivos una vez, construye un grafo de conocimiento persistente, y permite consultar todo en lenguaje natural sin re-leer un solo archivo. La reducción de tokens reportada es 71.5x comparada con volcar archivos crudos al contexto en cada sesión. 
+For large technical codebases and vaults, there is Graphify — a Claude Code skill published 48 hours after Karpathy's post. It reads your files once, builds a persistent, navigable knowledge graph, and allows querying everything in natural language without re-reading a single file. The reported token reduction is 71.5x compared to dumping raw files into context each session.
 
-El riesgo principal es el graph drift : cuando se agregan nuevos archivos, Graphify detecta comunidades de nuevo pero no elimina automáticamente relaciones obsoletas de indexaciones anteriores, generando nodos duplicados y relaciones rotas. 
+The main risk is graph drift: when new files are added, Graphify re-detects communities but does not automatically remove stale relationships from previous indexing runs, generating duplicate nodes and broken relationships.
 
 
-Parte VIII 
+Part VIII
 
-## El Vault como Memoria Compartida entre Múltiples Agentes 
+## The Vault as Shared Memory Between Multiple Agents
 
-El vault de Obsidian como capa agnóstica al modelo que Claude Code, Gemini CLI, Codex, Cursor y otros pueden leer y escribir simultáneamente. 
+The Obsidian vault as a model-agnostic layer that Claude Code, Gemini CLI, Codex, Cursor, and others can read and write simultaneously.
 
 
-### El vault sobrevive al modelo 
+### The vault survives the model
 
-Este es el argumento estratégico más importante de toda la arquitectura. Si mañana Claude tiene un outage, precios que suben, o un competidor lanza un modelo mejor — el vault persiste. La IA se vuelve intercambiable, de la misma manera que una base de datos lo es hoy para una aplicación: cambias el motor, no los datos. 
+This is the most important strategic argument of the entire architecture. If tomorrow Claude has an outage, prices that rise, or a competitor launches a better model — the vault persists. The AI becomes interchangeable, in the same way a database is today for an application: you change the engine, not the data.
 
-La garantía anti-lock-in: El vault es Markdown plano. Cualquier agente que pueda leer archivos puede usarlo. Claude Code, Codex CLI, Gemini CLI, Aider, Cursor en modo agente — todos leen el mismo vault. Cambias CLAUDE.md al nombre correspondiente (AGENTS.md, GEMINI.md) y el sistema funciona idénticamente. 
-Estructura multi-agente en el vault 
-vault/ ├── CLAUDE.md ← leído por Claude Code automáticamente ├── AGENTS.md ← leído por Codex CLI, Cursor, Windsurf, Copilot ├── GEMINI.md ← leído por Gemini CLI │
-├── .claude/ │ ├── settings.json ← hooks de Claude Code │ └── scripts/ ← scripts COMPARTIDOS entre agentes ├── .codex/ │ └── hooks.json ← hooks de Codex (apuntan a los MISMOS scripts) └── .gemini/ └── settings.json ← hooks de Gemini (mismos scripts) 
+The anti-lock-in guarantee: The vault is plain Markdown. Any agent that can read files can use it. Claude Code, Codex CLI, Gemini CLI, Aider, Cursor in agent mode — all read the same vault. You change CLAUDE.md to the corresponding name (AGENTS.md, GEMINI.md) and the system works identically.
 
+Multi-agent structure in the vault
+vault/ ├── CLAUDE.md ← read by Claude Code automatically ├── AGENTS.md ← read by Codex CLI, Cursor, Windsurf, Copilot ├── GEMINI.md ← read by Gemini CLI │
+├── .claude/ │ ├── settings.json ← Claude Code hooks │ └── scripts/ ← SHARED scripts between agents ├── .codex/ │ └── hooks.json ← Codex hooks (point to the SAME scripts) └── .gemini/ └── settings.json ← Gemini hooks (same scripts)
 
-### El patrón de hooks compartidos 
 
-La parte técnica más elegante del sistema multi-agente: los hooks son compartidos. El código de procedimiento es dueño del entorno. El agente es dueño del contenido. Los hooks manejan clasificación, validación, indexación e inyección del ciclo de vida — determinísticos, testeables, corren igual para cada agente. 
+### The shared hooks pattern
 
+The most elegant technical part of the multi-agent system: hooks are shared. Procedural code owns the environment. The agent owns the content. Hooks handle classification, validation, indexing, and lifecycle injection — deterministic, testable, run the same for every agent.
 
-Hook 
 
-Cuándo corre 
+Hook
 
-Qué hace 
+When it runs
 
-SessionStart 
+What it does
 
-Al iniciar sesión 
+SessionStart
 
-Inyecta contexto: hot cache + proyectos activos 
+On session start
 
-PreMessage 
+Injects context: hot cache + active projects
 
-Antes de procesar 
+PreMessage
 
-Clasifica contenido (decisión, incidente, win) 
+Before processing
 
-PostMessage 
+Classifies content (decision, incident, win)
 
-Después de respuesta 
+PostMessage
 
-Valida que notas escritas tengan links correctos 
+After response
 
-PreWrite 
+Validates that written notes have correct links
 
-Antes de crear archivo 
+PreWrite
 
-Verifica estructura, busca duplicados 
+Before creating file
 
-Stop 
+Verifies structure, searches for duplicates
 
-Al terminar sesión 
+Stop
 
-Actualiza índices, hot cache, wrap-up 
+On session end
 
+Updates indexes, hot cache, wrap-up
 
-### Limitación crítica documentada: escrituras concurrentes 
 
-El vault es un contenedor único. Si dos agentes modifican el mismo archivo simultáneamente, se necesita un árbitro. La solución documentada es Git: Obsidian Git hace commit automático antes de que cualquier agente empiece a escribir. Ante conflicto, git detecta y permite resolución manual o via script. 
+### Critical documented limitation: concurrent writes
 
-Para mayor aislamiento: usar subcarpetas de output separadas por agente bajo _agent/ , con frontmatter que identifique qué agente escribió cada nota ( agente: claude-code ). 
+The vault is a single container. If two agents modify the same file simultaneously, an arbiter is needed. The documented solution is Git: Obsidian Git makes an automatic commit before any agent starts writing. On conflict, git detects it and allows manual resolution or via script.
 
+For greater isolation: use separate output subfolders per agent under _agent/, with frontmatter identifying which agent wrote each note (agent: claude-code).
 
-Parte IX 
 
-## El Problema de la Contaminación 
+Part IX
 
-Cuando la IA escribe libremente en tu vault, ¿cómo distingues tu conocimiento del conocimiento generado? Las estrategias para preservar la integridad epistémica del sistema. 
+## The Contamination Problem
 
+When AI writes freely in your vault, how do you distinguish your knowledge from generated knowledge? Strategies for preserving the epistemic integrity of the system.
 
-### La contaminación del vault: dilución y propagación 
 
-Cuando un agente de IA escribe libremente en el mismo espacio donde capturas conocimiento personal, los dos tipos de contenido se mezclan. El vault deja de ser una extensión de tu pensamiento y se convierte en un promedio ruidoso entre tú y el modelo. 
+### Vault contamination: dilution and propagation
 
-El riesgo más documentado: las alucinaciones grabadas como hechos. Con RAG puro, una respuesta incorrecta es solo una respuesta incorrecta. Con un LLM Wiki, un malentendido pequeño puede propagarse silenciosamente entre páginas enlazadas . Una alucinación en una página crea un wikilink a otra. Esa segunda la cita. Una tercera la cita a ella. En tres pasos, un error se convierte en "hecho" citado en múltiples lugares. 
+When an AI agent writes freely in the same space where you capture personal knowledge, the two types of content mix. The vault stops being an extension of your thinking and becomes a noisy average between you and the model.
 
+The most documented risk: hallucinations recorded as facts. With pure RAG, an incorrect response is just an incorrect response. With an LLM Wiki, a small misunderstanding can propagate silently between linked pages. A hallucination on one page creates a wikilink to another. That second one cites it. A third cites that one. In three steps, an error becomes a "fact" cited in multiple places.
 
-### Solución 1 — Provenance tracking por claim 
 
-El patrón más sofisticado documentado: cada afirmación en una página wiki está etiquetada según su origen. 
+### Solution 1 — Provenance tracking per claim
 
-Provenance tracking en frontmatter y cuerpo 
---- tipo: concepto provenance: extracted: 85 % # viene directamente de fuentes inferred: 12 % # síntesis del LLM ambiguous: 3 % # fuentes contradictorias --- Texto verificado que viene de fuente directa. [extracted] El agente infirió esto de múltiples fuentes. ^[inferred] Las fuentes no coinciden sobre este punto. ^[ambiguous] 
+The most sophisticated pattern documented: every statement in a wiki page is tagged by its origin.
 
+Provenance tracking in frontmatter and body
+--- type: concept provenance: extracted: 85% # comes directly from sources inferred: 12% # LLM synthesis ambiguous: 3% # contradictory sources --- Verified text that comes from direct source. [extracted] The agent inferred this from multiple sources. ^[inferred] Sources do not agree on this point. ^[ambiguous]
 
-### Solución 2 — Flag author-type en frontmatter 
 
-La solución más simple y más adoptada. Todo archivo creado por el agente incluye author-type: agent y verificado: false . El agente nunca modifica notas con author-type: human . 
+### Solution 2 — author-type flag in frontmatter
 
-### Solución 3 — Zonas de escritura separadas 
+The simplest and most widely adopted solution. Every file created by the agent includes author-type: agent and verified: false. The agent never modifies notes with author-type: human.
 
-Separación por carpetas en CLAUDE.md 
-## Zonas de escritura - _human-only/ → ACCESO PROHIBIDO. Nunca leer, nunca modificar.
-- _agent/ → tu zona de trabajo. Escribir libremente aquí.
-- wiki/ → zona compartida. Solo con provenance tracking.
-- raw/ → inmutable. Solo lectura. Nunca modificar. 
+### Solution 3 — Separate writing zones
 
+Zone separation in CLAUDE.md
+## Writing zones - _human-only/ → FORBIDDEN ACCESS. Never read, never modify.
+- _agent/ → your workspace. Write freely here.
+- wiki/ → shared zone. Only with provenance tracking.
+- raw/ → immutable. Read-only. Never modify.
 
-### Solución 4 — Vista de verificación pendiente 
 
-Una vista de Bases que filtra notas con verificado: false y author-type: agent . El humano revisa estas notas periódicamente y las promociona a verificado: true una vez validadas. 
+### Solution 4 — Pending verification view
 
-### El insight más importante de este tema 
+A Bases view that filters notes with verified: false and author-type: agent. The human reviews these notes periodically and promotes them to verified: true once validated.
 
-La verdad incómoda: la IA no es el foso defensivo. Tus notas sí lo son. Todos tienen acceso a los mismos modelos. El diferenciador es tener años de escritura personal interlinkeada con la que el modelo trabaja. Un vault donde no puedes distinguir qué escribiste tú y qué escribió el agente ha perdido su ventaja fundamental. 
+### The most important insight on this topic
 
+The uncomfortable truth: AI is not the defensive moat. Your notes are. Everyone has access to the same models. The differentiator is having years of personal interlinking writing that the model works with. A vault where you can't distinguish what you wrote from what the agent wrote has lost its fundamental advantage.
 
-Medida 
 
-Implementación 
+Measure
 
-Dificultad 
+Implementation
 
-Provenance tracking por claim 
+Difficulty
 
-^[inferred] + bloque provenance: en frontmatter 
+Provenance tracking per claim
 
-Media 
+^[inferred] + provenance: block in frontmatter
 
-Flag author-type en frontmatter 
+Medium
 
-Regla en CLAUDE.md + plugin Linter 
+author-type flag in frontmatter
 
-Baja 
+Rule in CLAUDE.md + Linter plugin
 
-Zona _human-only/ prohibida 
+Low
 
-Regla explícita en CLAUDE.md 
+_human-only/ forbidden zone
 
-Baja 
+Explicit rule in CLAUDE.md
 
-Vista de verificación pendiente 
+Low
 
-Obsidian Bases filtrando verificado: false 
+Pending verification view
 
-Baja 
+Obsidian Bases filtering verified: false
 
-Cita de fuente obligatoria en wiki 
+Low
 
-Regla en CLAUDE.md + callout [!question] 
+Mandatory source citation in wiki
 
-Baja 
+Rule in CLAUDE.md + [!question] callout
 
-Git para rastrear cambios del agente 
+Low
 
-Obsidian Git + commits por sesión 
+Git to track agent changes
 
-Baja 
+Obsidian Git + commits per session
 
+Low
 
-Parte X 
 
-## Agentes Programados y Ciclos de Heartbeat 
+Part X
 
-La pieza que transforma un vault estático en un sistema que se auto-mejora: ciclos de reflexión programados que corren autónomamente. 
+## Scheduled Agents and Heartbeat Cycles
 
+The piece that transforms a static vault into a self-improving system: programmed reflection cycles that run autonomously.
 
-### El heartbeat como diferenciador fundamental 
 
-Sin heartbeat, el vault acumula notas pero no aprende. Con heartbeat, cada ciclo consolida, conecta y sintetiza — el vault del lunes sabe más que el del domingo sin que hayas hecho nada. El heartbeat es lo que hace que el sistema se auto-mejore en lugar de ser estático. 
+### The heartbeat as fundamental differentiator
 
-### Los tres niveles de ciclo 
+Without heartbeat, the vault accumulates notes but does not learn. With heartbeat, every cycle consolidates, connects, and synthesizes — Monday's vault knows more than Sunday's without you having done anything. The heartbeat is what makes the system self-improve rather than remain static.
 
-crontab — configuración de ciclos 
-# Heartbeat diario — 6:00 AM (ligero, 5-10 min) 0 6 * * * /path/to/run-heartbeat-daily.sh # Procesamiento de inbox — cada noche 11 PM 0 23 * * * /path/to/process-inbox.sh # Revisión semanal — Domingos 8:00 AM (profunda, 30-60 min) 0 8 * * 0 /path/to/run-weekly-review.sh # Fact-checking — Martes y Jueves 7:00 AM 0 7 * * 2,4 /path/to/run-factcheck.sh 
+### The three cycle levels
 
-Script de heartbeat diario — modo headless 
+crontab — cycle configuration
+# Daily heartbeat — 6:00 AM (light, 5-10 min) 0 6 * * * /path/to/run-heartbeat-daily.sh # Inbox processing — every night 11 PM 0 23 * * * /path/to/process-inbox.sh # Weekly review — Sundays 8:00 AM (deep, 30-60 min) 0 8 * * 0 /path/to/run-weekly-review.sh # Fact-checking — Tuesdays and Thursdays 7:00 AM 0 7 * * 2,4 /path/to/run-factcheck.sh
+
+Daily heartbeat script — headless mode
 #!/bin/bash # run-heartbeat-daily.sh claude --system-prompt-file ~/.claude/heartbeat-system.md \
  --task "Run daily heartbeat cycle" \
  --context-file ~/.claude/heartbeat-context.md \
- --no-interactive 
+ --no-interactive
 
 
-Nivel 
+Level
 
-Frecuencia 
+Frequency
 
-Duración 
+Duration
 
-Qué hace 
+What it does
 
-Sesión 
+Session
 
-Automático (hooks) 
+Automatic (hooks)
 
-Segundos 
+Seconds
 
-Actualiza hot cache al inicio/fin. Registra memoria episódica. 
+Updates hot cache at start/end. Records episodic memory.
 
-Diario 
+Daily
 
-Cron 6 AM 
+Cron 6 AM
 
-5-10 min 
+5-10 min
 
-Procesa inbox, actualiza índices, detecta broken links, actualiza hot cache. 
+Processes inbox, updates indexes, detects broken links, updates hot cache.
 
-Semanal 
+Weekly
 
-Cron Domingo 8 AM 
+Cron Sunday 8 AM
 
-30-60 min 
+30-60 min
 
-North Star alignment, identifica proyectos desviados, surfacea conexiones no explícitas, actualiza user model, mejora skills. 
+North Star alignment, identifies drifted projects, surfaces non-explicit connections, updates user model, improves skills.
 
 
-### Skills versionadas: el sistema que se auto-mejora 
+### Versioned skills: the self-improving system
 
-Las skills no son estáticas. El agente puede mejorarlas basándose en la memoria episódica acumulada. 
+Skills are not static. The agent can improve them based on accumulated episodic memory.
 
-Estructura de versioning de skills 
-_agent/skills/ ├── ingest-url-v1.md ← versión original ├── ingest-url-v2.md ← mejorada después de 3 semanas ├── weekly-review-v1.md └── weekly-review-v2.md ← current # El agente siempre usa la versión más alta
-# La versión anterior se mantiene 2 semanas antes de archivar 
+Skills versioning structure
+_agent/skills/ ├── ingest-url-v1.md ← original version ├── ingest-url-v2.md ← improved after 3 weeks ├── weekly-review-v1.md └── weekly-review-v2.md ← current # Agent always uses the highest version
+# Previous version kept 2 weeks before archiving
 
-⚠️ Cuándo NO implementar heartbeat: Vault de menos de 50 notas (overhead > valor), sin disciplina de captura establecida (el heartbeat sobre inbox vacío no hace nada), sin Git en el vault (agente autónomo sin control de versiones es riesgo real), y durante la primera semana de uso (primero establece el hábito de captura, luego automatiza). 
+⚠️ When NOT to implement heartbeat: Vault with fewer than 50 notes (overhead > value), without established capture discipline (heartbeat on empty inbox does nothing), without Git in the vault (autonomous agent without version control is a real risk), and during the first week of use (first establish the capture habit, then automate).
 
 
-### Git hooks como alternativa a cron 
+### Git hooks as alternative to cron
 
-Para quienes prefieren que el heartbeat corra solo cuando hay cambios reales en el vault, en lugar de en horarios fijos: 
+For those who prefer the heartbeat to run only when there are real changes in the vault, rather than on fixed schedules:
 
-.git/hooks/post-commit — heartbeat reactivo 
-#!/bin/bash # Solo correr si hay cambios en el vault de conocimiento if git diff HEAD~1 --name-only | grep -q "^wiki/\|^raw/\|^20-" ; then claude --print "Revisa broken links y notas huérfanas relacionadas
- con los archivos modificados en este commit.
- Actualiza _agent/lint-report.md con hallazgos." fi 
+.git/hooks/post-commit — reactive heartbeat
+#!/bin/bash # Only run if there are changes in the knowledge vault if git diff HEAD~1 --name-only | grep -q "^wiki/\|^raw/\|^20-"; then claude --print "Check broken links and orphan notes related
+ to the files modified in this commit.
+ Update _agent/lint-report.md with findings." fi
 
 
-Parte XI 
+Part XI
 
-## Memoria Nativa de Anthropic: Estado Real en Abril 2026 
+## Anthropic Native Memory: Real State in April 2026
 
-Anthropic tiene tres sistemas de memoria distintos desplegados en 2026. Entender las diferencias es crítico para decidir qué construir en Obsidian y qué dejar a Anthropic. Nivel de confianza en esta sección: 97%. 
+Anthropic has three distinct memory systems deployed in 2026. Understanding the differences is critical to deciding what to build in Obsidian and what to leave to Anthropic. Confidence level in this section: 97%.
 
 
-### Tres sistemas distintos, no uno 
+### Three distinct systems, not one
 
-La investigación revela que Anthropic no tiene una sola feature de memoria — tiene tres sistemas con alcances completamente diferentes, desplegados en distintos momentos de 2025-2026. Confundirlos lleva a decisiones arquitectónicas erróneas. 
+The research reveals that Anthropic does not have a single memory feature — it has three systems with completely different scopes, deployed at different points in 2025–2026. Confusing them leads to incorrect architectural decisions.
 
 
-Sistema 
+System
 
-Scope 
+Scope
 
-Portabilidad 
+Portability
 
-Control 
+Control
 
-Para quién 
+For whom
 
-Memoria claude.ai 
-Disponible desde marzo 2026 
+claude.ai Memory
+Available since March 2026
 
-Solo claude.ai 
+claude.ai only
 
-Locked — no viaja entre herramientas 
+Locked — does not travel between tools
 
-Bajo 
+Low
 
-Usuarios finales 
+End users
 
-Memory Tool API 
-Para desarrolladores 
+Memory Tool API
+For developers
 
-Tu infraestructura 
+Your infrastructure
 
-Total — tú controlas el filesystem 
+Total — you control the filesystem
 
-Total 
+Total
 
-Desarrolladores 
+Developers
 
-Managed Agents Memory 
-Beta pública 23 abril 2026 
+Managed Agents Memory
+Public beta April 23, 2026
 
-Claude Platform cloud 
+Claude Platform cloud
 
-Locked — Claude Platform only 
+Locked — Claude Platform only
 
-Medio 
+Medium
 
-Empresas con API 
+Companies with API
 
-Vault Obsidian 
-El patrón de esta investigación 
+Obsidian Vault
+The pattern of this research
 
-Tu filesystem local 
+Your local filesystem
 
-Total — cualquier modelo puede usarlo 
+Total — any model can use it
 
-Total 
+Total
 
-Todos 
+Everyone
 
-ℹ️ Dato técnico crítico: La memoria de claude.ai no aplica a acceso via API ni Claude Code. Cuando un desarrollador hace una query a Claude a través de la API, no hay capa de memoria persistente. Cada llamada a la API empieza desde cero. Son sistemas completamente separados. 
+ℹ️ Critical technical fact: claude.ai memory does not apply to API access or Claude Code. When a developer makes a query to Claude through the API, there is no persistent memory layer. Each API call starts from scratch. They are completely separate systems.
 
 
-### Managed Agents Memory — lo más nuevo (23 abril 2026) 
+### Managed Agents Memory — the newest (April 23, 2026)
 
-En su núcleo, un memory store es una colección de documentos de texto en el scope del workspace, optimizada para Claude. Es literalmente una carpeta de archivos Markdown que el agente puede leer, escribir y actualizar entre sesiones. Las memorias se almacenan como archivos para que los desarrolladores puedan exportarlas, gestionarlas via API y mantener control total. 
+At its core, a memory store is a collection of text documents in the workspace scope, optimized for Claude. It is literally a folder of Markdown files that the agent can read, write, and update between sessions. Memories are stored as files so developers can export them, manage them via API, and maintain full control.
 
-Casos de uso documentados: Netflix usa memoria para llevar contexto entre sesiones, incluyendo correcciones de revisores. Rakuten reporta 97% menos errores en primera pasada. Wisedocs logró 30% más velocidad en verificación de documentos. 
+Documented use cases: Netflix uses memory to carry context between sessions, including reviewer corrections. Rakuten reports 97% fewer first-pass errors. Wisedocs achieved 30% faster document verification.
 
-El dato más relevante del diseño técnico: Memory on Managed Agents mounts directly onto a filesystem, so Claude can rely on the same bash and code execution capabilities . Esto significa que el vault de Obsidian podría ser exactamente ese filesystem. 
+The most relevant fact from the technical design: Memory on Managed Agents mounts directly onto a filesystem, so Claude can rely on the same bash and code execution capabilities. This means the Obsidian vault could be exactly that filesystem.
 
-### La implicación estratégica para el vault 
+### The strategic implication for the vault
 
-Con los tres sistemas identificados, la arquitectura óptima de abril 2026 queda clara: usar la memoria nativa de claude.ai para preferencias personales ligeras (se actualiza sola, no requiere mantenimiento), el vault de Obsidian para conocimiento estructurado portable (la decisión arquitectónica central de esta investigación), y el Memory Tool API para agentes en producción que necesiten aprender entre sesiones de usuarios. 
+With the three systems identified, the optimal architecture for April 2026 becomes clear: use claude.ai native memory for light personal preferences (self-updating, no maintenance required), the Obsidian vault for portable structured knowledge (the central architectural decision of this research), and the Memory Tool API for production agents that need to learn between user sessions.
 
-La razón para seguir construyendo en Obsidian incluso con memoria nativa disponible: La memoria de Managed Agents es Claude-only. El vault de Obsidian es agnóstico al modelo. Si cambias de Claude a Gemini mañana, el vault persiste. El conocimiento es tuyo independientemente de qué modelo use tu sistema en el futuro. 
+The reason to keep building in Obsidian even with native memory available: Managed Agents memory is Claude-only. The Obsidian vault is model-agnostic. If you switch from Claude to Gemini tomorrow, the vault persists. The knowledge is yours regardless of which model your system uses in the future.
 
-Parte XII 
+Part XII
 
-## Guía de Implementación Práctica 
+## Practical Implementation Guide
 
-De cero a un vault conectado con IA. Tres rutas según nivel técnico. Pasos verificados con fuentes reales. 
+From zero to a vault connected with AI. Three routes by technical level. Steps verified with real sources.
 
 
-### Antes de empezar: elige tu ruta 
+### Before you start: choose your route
 
 
-Ruta 
+Route
 
-Para quién 
+For whom
 
-Tiempo 
+Time
 
-Potencia 
+Power
 
-Requiere terminal 
+Requires terminal
 
-A — Claude Code 
+A — Claude Code
 
-Desarrolladores, usuarios técnicos 
+Developers, technical users
 
-~90 min 
+~90 min
 
-Máxima 
+Maximum
 
-Sí 
+Yes
 
-B — Claude Desktop MCP 
+B — Claude Desktop MCP
 
-Usuarios con plan Pro/Max 
+Users with Pro/Max plan
 
-~60 min 
+~60 min
 
-Alta 
+High
 
-Mínima 
+Minimal
 
-C — Chat Manual 
+C — Manual Chat
 
-Cualquier usuario, cualquier IA 
+Any user, any AI
 
-~30 min 
+~30 min
 
-Media 
+Medium
 
-No 
+No
 
 
-### Paso 1: Instalar Obsidian 
+### Step 1: Install Obsidian
 
-Versión actual: 1.12.7 (marzo 2026). Descargar desde obsidian.md/download . Gratis para uso personal. Desde la versión 1.12.4 (27 febrero 2026), el CLI oficial está incluido de forma gratuita para todos los usuarios — no requiere Catalyst License ni suscripción especial. 
+Current version: 1.12.7 (March 2026). Download from obsidian.md/download. Free for personal use. Since version 1.12.4 (February 27, 2026), the official CLI is included free for all users — no Catalyst License or special subscription required.
 
-✓ Después de instalar, ve a Settings → Community Plugins → Turn on community plugins (o "Disable safe mode"). Esto es necesario para instalar los plugins que conectarán la IA. Sin este paso, la tienda de plugins no estará disponible. 
+✓ After installing, go to Settings → Community Plugins → Turn on community plugins (or "Disable safe mode"). This is necessary to install the plugins that will connect the AI. Without this step, the plugin store will not be available.
 
 
-### Paso 2: Crear el vault 
+### Step 2: Create the vault
 
-En Obsidian: Create new vault → nombre en kebab-case (ej: meta-brain , sin espacios) → ubicación en tu carpeta Documentos. El nombre del vault importa: evitar espacios y caracteres especiales, especialmente si planeas usar Claude Code o scripts automatizados. 
+In Obsidian: Create new vault → name in kebab-case (e.g.: meta-brain, no spaces) → location in your Documents folder. The vault name matters: avoid spaces and special characters, especially if you plan to use Claude Code or automated scripts.
 
-### Paso 3: Crear la estructura de carpetas 
+### Step 3: Create the folder structure
 
-Estructura mínima para empezar 
-# Crear en Obsidian: clic derecho en panel izquierdo → New folder vault/ ├── 00-meta/ ← índice maestro ├── 10-zona-a/ ← tu primer dominio de conocimiento ├── 20-zona-b/ ← segundo dominio ├── 40-inbox/ ← captura rápida ├── 50-archivo/ ← proyectos cerrados ├── _agent/ │ ├── working/ │ └── episodic/ ├── templates/
-└── attachments/ 
+Minimal structure to start
+# Create in Obsidian: right-click in left panel → New folder vault/ ├── 00-meta/ ← master index ├── 10-zone-a/ ← your first knowledge domain ├── 20-zone-b/ ← second domain ├── 40-inbox/ ← quick capture ├── 50-archive/ ← closed projects ├── _agent/ │ ├── working/ │ └── episodic/ ├── templates/
+└── attachments/
 
 
-### Paso 4: Configurar los plugins esenciales 
+### Step 4: Configure the essential plugins
 
-Instalar en este orden exacto (Settings → Community plugins → Browse): 
+Install in this exact order (Settings → Community plugins → Browse):
 
-1 
-Obsidian Git — prerequisito absoluto 
-Buscar "Obsidian Git" → Install → Enable. Configurar en Settings → Obsidian Git → activar "Auto backup" cada 10 minutos. Necesitas Git instalado en tu sistema (git-scm.com si no lo tienes). Sin Git, cualquier agente con acceso de escritura es un riesgo sin retorno posible. 
+1
+Obsidian Git — absolute prerequisite
+Search "Obsidian Git" → Install → Enable. Configure in Settings → Obsidian Git → enable "Auto backup" every 10 minutes. You need Git installed on your system (git-scm.com if you don't have it). Without Git, any write-capable agent is a risk with no way back.
 
 
-2 
-Linter 
-Buscar "Linter" → Install → Enable. En Settings → Linter: activar "Format on save", activar "Add YAML frontmatter if missing". Esto garantiza que cada nota creada o modificada tenga frontmatter consistente automáticamente. 
+2
+Linter
+Search "Linter" → Install → Enable. In Settings → Linter: enable "Format on save", enable "Add YAML frontmatter if missing". This ensures every created or modified note has consistent frontmatter automatically.
 
 
-3 
-Templater 
-Buscar "Templater" → Install → Enable. Configurar la carpeta de templates en Settings → Templater → Template folder → "templates". Crear plantillas para los tipos de nota más frecuentes. 
+3
+Templater
+Search "Templater" → Install → Enable. Configure the templates folder in Settings → Templater → Template folder → "templates". Create templates for the most frequent note types.
 
 
-4 
-QuickAdd 
-Para captura rápida via atajo de teclado. Configurar macros que pregunten el título y creen la nota en la carpeta correcta automáticamente. 
+4
+QuickAdd
+For quick capture via keyboard shortcut. Configure macros that ask for the title and automatically create the note in the correct folder.
 
 
-### Paso 5: Crear el CLAUDE.md 
+### Step 5: Create CLAUDE.md
 
-Crear un archivo nuevo en la raíz del vault (no dentro de ninguna carpeta) llamado exactamente CLAUDE.md . Usar la plantilla de la Parte III como base. Personalizar las secciones de estructura, proyectos activos y preferencias. Crear también _agent/working/hot-cache.md vacío con la estructura básica. 
+Create a new file in the vault root (not inside any folder) named exactly CLAUDE.md. Use the Part III template as a base. Customize the structure, active projects, and preferences sections. Also create _agent/working/hot-cache.md empty with the basic structure.
 
-### Paso 6A — Ruta A: Claude Code 
+### Step 6A — Route A: Claude Code
 
-Instalación y primera sesión — Claude Code 
-# Requisito: Node.js 18+ instalado (nodejs.org) # 1. Instalar Claude Code npm install -g @anthropic-ai/claude-code # 2. Instalar Obsidian Skills oficiales npx skills add kepano/obsidian-skills # 3. Navegar al vault cd ~/Documents/meta-brain # Mac/Linux cd C:\Users\nombre\Documents\meta-brain # Windows # 4. Iniciar Claude Code claude # 5. En la sesión: invocar skill antes de crear notas /obsidian-markdown # 6. Verificar que lee el vault "¿Qué carpetas tiene este vault y para qué sirve cada una?" # Debe describir TUS carpetas, no responder genéricamente 
+Installation and first session — Claude Code
+# Requirement: Node.js 18+ installed (nodejs.org) # 1. Install Claude Code npm install -g @anthropic-ai/claude-code # 2. Install official Obsidian Skills npx skills add kepano/obsidian-skills # 3. Navigate to vault cd ~/Documents/meta-brain # Mac/Linux cd C:\Users\name\Documents\meta-brain # Windows # 4. Start Claude Code claude # 5. In the session: invoke skill before creating notes /obsidian-markdown # 6. Verify it reads the vault "What folders does this vault have and what is each one for?" # Should describe YOUR folders, not respond generically
 
 
-### Paso 6B — Ruta B: Claude Desktop + MCP 
+### Step 6B — Route B: Claude Desktop + MCP
 
-1 
-Instalar Claude Desktop 
-claude.ai → tu nombre → "Download Claude for [Windows/Mac]". Requiere plan Pro o Max para usar MCP servers. 
+1
+Install Claude Desktop
+claude.ai → your name → "Download Claude for [Windows/Mac]". Requires Pro or Max plan to use MCP servers.
 
 
-2 
-Instalar plugin Local REST API en Obsidian 
-Settings → Community plugins → Browse → "Local REST API" → Install → Enable. Anotar la API Key que aparece en Settings → Local REST API. 
+2
+Install Local REST API plugin in Obsidian
+Settings → Community plugins → Browse → "Local REST API" → Install → Enable. Note the API Key that appears in Settings → Local REST API.
 
 
-3 
-Abrir el archivo de configuración de Claude Desktop 
-En Claude Desktop: menú → Settings → Developer → Edit Config . Ubicaciones manuales: 
-Mac: ~/Library/Application Support/Claude/claude_desktop_config.json 
-Windows: %APPDATA%\Claude\claude_desktop_config.json 
+3
+Open the Claude Desktop configuration file
+In Claude Desktop: menu → Settings → Developer → Edit Config. Manual locations:
+Mac: ~/Library/Application Support/Claude/claude_desktop_config.json
+Windows: %APPDATA%\Claude\claude_desktop_config.json
 
 
-4 
-Agregar configuración MCP 
-Reemplazar el contenido del archivo con la configuración del servidor MCP. Ver código abajo. 
+4
+Add MCP configuration
+Replace the file contents with the MCP server configuration. See code below.
 
 
-5 
-Reiniciar Claude Desktop completamente 
-Mac: Cmd+Q. Windows: clic derecho en bandeja → Quit. Reabrir. Si aparece el ícono 🔨 en la barra del chat, la conexión funciona. 
+5
+Fully restart Claude Desktop
+Mac: Cmd+Q. Windows: right-click tray → Quit. Reopen. If the 🔨 icon appears in the chat bar, the connection works.
 
 
-claude_desktop_config.json 
-{ "mcpServers" : { "obsidian" : { "command" : "npx" , "args" : [ "-y" , "mcp-obsidian" ], "env" : { "OBSIDIAN_API_KEY" : "TU_API_KEY_AQUI" , "OBSIDIAN_HOST" : "127.0.0.1" , "OBSIDIAN_PORT" : "27124" }
+claude_desktop_config.json
+{ "mcpServers": { "obsidian": { "command": "npx", "args": ["-y", "mcp-obsidian"], "env": { "OBSIDIAN_API_KEY": "YOUR_API_KEY_HERE", "OBSIDIAN_HOST": "127.0.0.1", "OBSIDIAN_PORT": "27124" }
  }
  }
-} // Alternativa más simple (sin plugin, sin Obsidian abierto): { "mcpServers" : { "obsidian" : { "command" : "npx" , "args" : [ "-y" , "@bitbonsai/mcpvault@latest" , "/ruta/de/tu/vault" ]
+} // Simpler alternative (no plugin, Obsidian does not need to be open): { "mcpServers": { "obsidian": { "command": "npx", "args": ["-y", "@bitbonsai/mcpvault@latest", "/path/to/your/vault"]
  }
  }
-} 
+}
 
 
-### Paso 6C — Ruta C: Chat Manual (cualquier IA) 
+### Step 6C — Route C: Manual Chat (any AI)
 
-Sin instalaciones adicionales. Al iniciar cada sesión de trabajo: (1) abrir el CLAUDE.md del vault y copiarlo al chat, (2) pegar el hot-cache.md, (3) pegar las notas relevantes para la tarea, (4) incluir en el primer mensaje la instrucción: "Trabajarás como agente de mi vault de Obsidian. Usa siempre [[wikilinks]] para referencias internas. Incluye frontmatter YAML en todas las notas que generes." 
+No additional installations. At the start of each work session: (1) open the vault CLAUDE.md and copy it to the chat, (2) paste hot-cache.md, (3) paste the notes relevant to the task, (4) include in the first message: "You will work as an agent for my Obsidian vault. Always use [[wikilinks]] for internal references. Include YAML frontmatter in all notes you generate."
 
-Al terminar la sesión, pedir el resumen para actualizar el hot-cache y copiar manualmente las notas generadas al vault. 
+At the end of the session, ask for the summary to update the hot-cache and manually copy the generated notes to the vault.
 
 
-### Primeros comandos para empezar desde el día uno 
+### Ready-to-use prompts for day one
 
 
-Qué quieres hacer 
+What you want to do
 
-Prompt listo para usar 
+Prompt ready to use
 
-Procesar ideas del inbox 
+Process inbox ideas
 
-Procesa los archivos de 40-inbox/, clasifícalos en las carpetas correctas y actualiza el hot-cache. 
+Process files from 40-inbox/, classify them into the correct folders and update the hot-cache.
 
-Crear nota de reunión 
+Create meeting note
 
-Crea una nota de reunión del [fecha] sobre [tema]. Extrae decisiones, tareas y contexto como campos separados. 
+Create a meeting note from [date] about [topic]. Extract decisions, tasks, and context as separate fields.
 
-Revisión semanal 
+Weekly review
 
-Genera un resumen de la semana: notas creadas, decisiones tomadas, tareas abiertas y prioridades para la siguiente semana. 
+Generate a weekly summary: notes created, decisions made, open tasks, and priorities for the next week.
 
-Ingestar artículo 
+Ingest article
 
-Lee este artículo [URL o contenido] y crea notas wiki con frontmatter y wikilinks a conceptos existentes en el vault. 
+Read this article [URL or content] and create wiki notes with frontmatter and wikilinks to existing vault concepts.
 
-Buscar decisiones pasadas 
+Find past decisions
 
-Busca en el vault todas las notas de tipo "decision" relacionadas con [tema]. 
+Search the vault for all "decision" type notes related to [topic].
 
-Verificar salud del vault 
+Verify vault health
 
-Revisa el vault: encuentra broken links, notas sin frontmatter y notas huérfanas sin backlinks. 
+Review the vault: find broken links, notes without frontmatter, and orphan notes without backlinks.
 
-Challenge a una idea 
+Challenge an idea
 
-Busca en el vault decisiones revertidas, fallas pasadas y contexto previo sobre [tema]. Desafía mi idea de [X] con evidencia de mis propias notas. 
+Search the vault for reversed decisions, past failures, and prior context about [topic]. Challenge my idea of [X] with evidence from my own notes.
 
-Actualizar hot-cache 
+Update hot-cache
 
-Actualiza _agent/working/hot-cache.md con el resumen de esta sesión. Máximo 500 palabras. 
+Update _agent/working/hot-cache.md with the summary of this session. Maximum 500 words.
 
 
-### Solución de problemas comunes 
+### Common problem solving
 
 
-Problema 
+Problem
 
-Causa 
+Cause
 
-Solución 
+Solution
 
-Claude Code no encuentra el CLAUDE.md 
+Claude Code does not find CLAUDE.md
 
-No estás en la carpeta del vault 
+You are not in the vault folder
 
-Ejecutar pwd (Mac) o cd (Win) para verificar ubicación. Navegar al vault con cd /ruta/vault y re-ejecutar claude . 
+Run pwd (Mac) or cd (Win) to verify location. Navigate to vault with cd /path/vault and re-run claude.
 
-Sin ícono 🔨 en Claude Desktop 
+No 🔨 icon in Claude Desktop
 
-JSON mal formateado, Obsidian cerrado, o API key incorrecta 
+Malformed JSON, Obsidian closed, or incorrect API key
 
-(1) Validar JSON en jsonlint.com. (2) Abrir Obsidian. (3) Verificar API key. (4) Reiniciar Claude Desktop completamente (no solo minimizar). 
+(1) Validate JSON at jsonlint.com. (2) Open Obsidian. (3) Verify API key. (4) Fully restart Claude Desktop (not just minimize).
 
-IA usa [texto](url) en vez de [[wikilinks]] 
+AI uses [text](url) instead of [[wikilinks]]
 
-Obsidian Skills no cargadas 
+Obsidian Skills not loaded
 
-Escribir /obsidian-markdown en Claude Code. Para otras rutas, incluir en prompt: "Usa siempre [[doble corchete]] para links internos". 
+Type /obsidian-markdown in Claude Code. For other routes, include in prompt: "Always use [[double brackets]] for internal links".
 
-Agente modificó notas que no debía 
+Agent modified notes it should not have
 
-CLAUDE.md sin reglas de zonas claras 
+CLAUDE.md without clear zone rules
 
-Ejecutar git checkout . para revertir. Agregar zona _human-only/ prohibida al CLAUDE.md. 
+Run git checkout . to revert. Add forbidden _human-only/ zone to CLAUDE.md.
 
-npm: command not found 
+npm: command not found
 
-Node.js no instalado o PATH no actualizado 
+Node.js not installed or PATH not updated
 
-Instalar Node.js desde nodejs.org y abrir una terminal nueva (no la que tenías abierta antes). 
+Install Node.js from nodejs.org and open a new terminal (not the one you had open before).
 
-Puerto 27124 en uso 
+Port 27124 in use
 
-Otro servicio usa ese puerto 
+Another service uses that port
 
-En Obsidian: Settings → Local REST API → cambiar puerto a 27125. Actualizar también en claude_desktop_config.json. 
+In Obsidian: Settings → Local REST API → change port to 27125. Also update in claude_desktop_config.json.
 
 
-### Secuencia de implementación recomendada 
+### Recommended implementation sequence
 
-1 
-Semana 1 — Infraestructura base 
-Instalar Obsidian, crear vault, estructura de carpetas, CLAUDE.md mínimo. Instalar Obsidian Git y hacer el primer commit. Conectar vía la ruta que elijas. No escalar antes de que la estructura base se sienta natural. 
+1
+Week 1 — Base infrastructure
+Install Obsidian, create vault, folder structure, minimal CLAUDE.md. Install Obsidian Git and make the first commit. Connect via whichever route you choose. Do not scale before the base structure feels natural.
 
 
-2 
-Semana 2 — Primeras 10 fuentes 
-Tomar 10 documentos importantes y pedir a la IA que los convierta en notas wiki. Verificar los resultados. Ajustar las convenciones de nomenclatura y frontmatter según lo que emerge. Esta fase enseña cómo funciona el sistema en la práctica. 
+2
+Week 2 — First 10 sources
+Take 10 important documents and ask the AI to convert them into wiki notes. Verify the results. Adjust naming conventions and frontmatter based on what emerges. This phase teaches how the system works in practice.
 
 
-3 
-Semana 3 — Ciclo semanal 
-Establecer el hábito de revisión semanal via prompt. Esto construye la disciplina de mantenimiento antes de automatizarlo. 
+3
+Week 3 — Weekly cycle
+Establish the habit of weekly review via prompt. This builds the maintenance discipline before automating it.
 
 
-4 
-Mes 2 — Automatización 
-Instalar las skills completas de kepano. Configurar hooks de sesión para hot cache automático. Opcionalmente: cron para heartbeat diario. 
+4
+Month 2 — Automation
+Install kepano's full skills. Configure session hooks for automatic hot cache. Optionally: cron for daily heartbeat.
 
 
-5 
-Mes 3+ — Expansión 
-Agregar zonas temáticas adicionales según la necesidad real. Explorar MCP servers para acceso desde Claude Desktop. Considerar archivos AGENTS.md y GEMINI.md para conectar otras IAs al mismo vault. 
+5
+Month 3+ — Expansion
+Add thematic zones based on real need. Explore MCP servers for access from Claude Desktop. Consider AGENTS.md and GEMINI.md files to connect other AIs to the same vault.
 
 
-Parte XIII · Actualización Mayo 2026 
+Part XIII · May 2026 Update
 
-## Graphify: El Preprocesador de Conocimiento para Obsidian 
+## Graphify: The Knowledge Preprocessor for Obsidian
 
-Una herramienta open-source lanzada en abril 2026 que resuelve el problema de ingestión masiva de archivos mixtos. No compite con Obsidian — es el pipeline de entrada que alimenta el vault con conocimiento ya estructurado. 
+An open-source tool launched in April 2026 that solves the problem of mass ingestion of mixed files. It does not compete with Obsidian — it is the input pipeline that feeds the vault with already-structured knowledge.
 
 
-### Qué es Graphify 
+### What is Graphify
 
-Graphify (PyPI: graphifyy — doble y) es una skill open-source MIT para agentes de IA, lanzada el 3 de abril de 2026 por Safi Shamsi. Cruzó 22,000 estrellas en GitHub en menos de 10 días y superó 250,000 descargas en PyPI. La idea central: en lugar de parsear archivos crudos cada vez que alguien hace una pregunta, los parseas una sola vez, construyes un grafo de conocimiento explícito y navegable, y todas las consultas futuras se responden recorriendo el grafo en lugar de re-leer los archivos. 
+Graphify (PyPI: graphifyy — double y) is an open-source MIT skill for AI agents, launched April 3, 2026 by Safi Shamsi. It crossed 22,000 GitHub stars in less than 10 days and surpassed 250,000 PyPI downloads. The central idea: instead of parsing raw files every time someone asks a question, you parse them once, build an explicit and navigable knowledge graph, and all future queries are answered by traversing the graph instead of re-reading the files.
 
-La analogía documentada: es la diferencia entre un ingeniero senior que ha internalizado la arquitectura del sistema y uno que hace grep en el repositorio cada vez que le preguntan cómo funciona la autenticación. El primero sigue el esqueleto. El segundo siempre está excavando. 
+The documented analogy: it is the difference between a senior engineer who has internalized the system architecture and one who runs grep in the repository every time they are asked how authentication works. The first follows the skeleton. The second is always excavating.
 
-El origen está en Karpathy: Graphify fue creado directamente inspirado por el post de Karpathy. El README del proyecto lo cita: "Karpathy keeps a /raw folder where he drops papers, tweets, screenshots, and notes." Graphify es esencialmente la automatización de la fase de compilación del patrón LLM Wiki — pero para archivos multimodales que Obsidian no puede procesar nativamente. 
+The origin is in Karpathy: Graphify was created directly inspired by Karpathy's post. The project README cites it: "Karpathy keeps a /raw folder where he drops papers, tweets, screenshots, and notes." Graphify is essentially the automation of the compilation phase of the LLM Wiki pattern — but for multimodal files that Obsidian cannot process natively.
 
-### Los tres artefactos de salida 
+### The three output artifacts
 
-ARTEFACTO 01 
-graph.html 
-visualización 
+ARTIFACT 01
+graph.html
+visualization
 
-Visualización interactiva con vis.js. Nodos son entidades (funciones, clases, conceptos, secciones de documentos), edges son relaciones (llamadas, imports, referencias, dependencias inferidas). Permite búsqueda, filtrado por tipo, y navegación entre comunidades detectadas. Click en cualquier nodo para explorar sus conexiones. 
+Interactive visualization with vis.js. Nodes are entities (functions, classes, concepts, document sections), edges are relationships (calls, imports, references, inferred dependencies). Allows search, type filtering, and navigation between detected communities. Click any node to explore its connections.
 
-ARTEFACTO 02 
-GRAPH_REPORT.md 
-resumen legible 
+ARTIFACT 02
+GRAPH_REPORT.md
+readable summary
 
-Resumen en Markdown plano de: los "god nodes" (nodos de mayor conectividad — los conceptos centrales del sistema), conexiones sorpresivas entre partes distantes del corpus, y preguntas sugeridas para hacerle al agente. Este archivo es directamente ingestable en el vault de Obsidian como nota wiki. 
+Markdown summary of: "god nodes" (highest connectivity nodes — the central concepts of the system), surprising connections between distant parts of the corpus, and suggested questions to ask the agent. This file is directly ingestable into the Obsidian vault as a wiki note.
 
-ARTEFACTO 03 
-graph.json 
-grafo consultable 
+ARTIFACT 03
+graph.json
+queryable graph
 
-El grafo completo y persistente en JSON. Caché basado en SHA256 — solo reprocesa archivos modificados en ejecuciones posteriores. Los agentes consultan graph.json en lugar de re-leer los archivos fuente. Reducción de tokens reportada: 71.5x vs. volcar archivos crudos al contexto (métrica auto-reportada — el principio es sólido, el número exacto no es verificable independientemente). 
+The complete, persistent graph in JSON. SHA256-based cache — only reprocesses modified files in subsequent runs. Agents query graph.json instead of re-reading source files. Reported token reduction: 71.5x vs. dumping raw files into context (self-reported metric — the principle is solid, the exact number is not independently verifiable).
 
 
-### Las tres pasadas de procesamiento 
+### The three processing passes
 
-Graphify no trata todos los tipos de archivo igual. Corre en tres fases con estrategias completamente distintas: 
+Graphify does not treat all file types the same. It runs in three phases with completely different strategies:
 
-- Pasada 1 — AST determinístico: archivos de código (20 lenguajes via tree-sitter). Extrae clases, funciones, imports, call graphs, docstrings y comentarios de diseño. Sin LLM — cero costo de API. 
+- Pass 1 — Deterministic AST: code files (20 languages via tree-sitter). Extracts classes, functions, imports, call graphs, docstrings and design comments. No LLM — zero API cost.
 
-- Pasada 2 — Transcripción local: archivos de video y audio via faster-whisper, que corre completamente en tu máquina. Nunca se sube nada a ningún servidor. El audio de reuniones de una hora se transcribe en minutos en una laptop moderna. Cero costo de API. 
+- Pass 2 — Local transcription: video and audio files via faster-whisper, which runs entirely on your machine. Nothing is ever uploaded to any server. One hour meeting audio transcribes in minutes on a modern laptop. Zero API cost.
 
-- Pasada 3 — Extracción semántica: documentos (Markdown, PDFs, RST) e imágenes (PNG, JPG, WebP, GIF). Claude subagentes corren en paralelo para extraer conceptos, relaciones y design rationale. Tu proveedor de IA ve el contenido de los documentos bajo los términos de tu acuerdo con ellos — no Graphify. 
+- Pass 3 — Semantic extraction: documents (Markdown, PDFs, RST) and images (PNG, JPG, WebP, GIF). Claude subagents run in parallel to extract concepts, relationships, and design rationale. Your AI provider sees the document content under the terms of your agreement with them — not Graphify.
 
-⚠️ Privacidad en Pasada 3: Si tus documentos contienen información sensible, revisa la política de datos de tu proveedor de IA antes de correr Graphify con PDFs o imágenes. Puedes usar --mode code para limitar el procesamiento a la Pasada 1 (AST puro) y evitar completamente las llamadas a la API. 
+⚠️ Privacy in Pass 3: If your documents contain sensitive information, review your AI provider's data policy before running Graphify with PDFs or images. You can use --mode code to limit processing to Pass 1 (pure AST) and completely avoid API calls.
 
 
-### Flags más relevantes para integración con Obsidian 
+### Most relevant flags for Obsidian integration
 
-Instalación y comandos clave 
-# Instalar (PyPI: graphifyy — doble y, el CLI sigue siendo "graphify") uv tool install graphifyy # recomendado — agrega al PATH automáticamente pip install graphifyy # alternativa graphify install # registrar como skill en Claude Code/Codex/Gemini CLI # Uso básico /graphify . # procesar directorio actual /graphify ./raw # procesar carpeta raw/ del vault /graphify ./raw --update # solo reprocesar archivos modificados /graphify ./raw --mode deep # extracción más agresiva de relaciones inferidas # Flags de integración con Obsidian /graphify ./raw --obsidian # genera vault de Obsidian directamente /graphify ./raw --obsidian --obsidian-dir ~/vaults/proyecto # ruta específica /graphify ./raw --wiki # genera wiki Markdown navegable por agentes # Opciones de exportación adicionales /graphify ./raw --mcp # iniciar como MCP server (expone el grafo a Claude Desktop) /graphify ./raw --watch # auto-sync cuando cambian archivos /graphify ./raw --no-viz # solo JSON + REPORT, sin HTML # Agregar fuentes externas al grafo graphify add https://arxiv.org/abs/1706.03762 # paper académico graphify add https://youtube.com/watch?v=... # transcribe video graphify query "what connects attention to the optimizer?" # consulta directa al grafo 
+Installation and key commands
+# Install (PyPI: graphifyy — double y, CLI is still "graphify") uv tool install graphifyy # recommended — adds to PATH automatically pip install graphifyy # alternative graphify install # register as skill in Claude Code/Codex/Gemini CLI # Basic usage /graphify . # process current directory /graphify ./raw # process vault raw/ folder /graphify ./raw --update # only reprocess modified files /graphify ./raw --mode deep # more aggressive inference of relationships # Obsidian integration flags /graphify ./raw --obsidian # generates Obsidian vault directly /graphify ./raw --obsidian --obsidian-dir ~/vaults/project # specific path /graphify ./raw --wiki # generates Markdown wiki navigable by agents # Additional export options /graphify ./raw --mcp # start as MCP server (exposes graph to Claude Desktop) /graphify ./raw --watch # auto-sync when files change /graphify ./raw --no-viz # JSON + REPORT only, no HTML # Add external sources to graph graphify add https://arxiv.org/abs/1706.03762 # academic paper graphify add https://youtube.com/watch?v=... # transcribe video graphify query "what connects attention to the optimizer?" # direct graph query
 
 
-### Graphify vs Obsidian: comparación directa 
+### Graphify vs Obsidian: direct comparison
 
 
-Dimensión 
+Dimension
 
-Graphify 
+Graphify
 
-Obsidian 
+Obsidian
 
-Propósito central 
+Core purpose
 
-Extraer y mapear relaciones desde archivos crudos mixtos 
+Extract and map relationships from raw mixed files
 
-Gestionar y navegar conocimiento ya estructurado 
+Manage and navigate already-structured knowledge
 
-Input ideal 
+Ideal input
 
-Código, PDFs, imágenes, videos, archivos mixtos sin procesar 
+Code, PDFs, images, videos, unprocessed mixed files
 
-Notas Markdown estructuradas, editadas por humanos 
+Structured Markdown notes, edited by humans
 
-Output principal 
+Main output
 
-graph.json + GRAPH_REPORT.md + graph.html 
+graph.json + GRAPH_REPORT.md + graph.html
 
-Vault navegable con wikilinks y grafo visual 
+Navigable vault with wikilinks and visual graph
 
-Relaciones 
+Relationships
 
-Detectadas automáticamente (AST + LLM + Leiden clustering) 
+Detected automatically (AST + LLM + Leiden clustering)
 
-Creadas manualmente por el humano o el agente 
+Created manually by human or agent
 
-Interfaz para humanos 
+Human interface
 
-graph.html interactivo (solo visualización) 
+Interactive graph.html (visualization only)
 
-Completa — editor, graph view, plugins, búsqueda 
+Complete — editor, graph view, plugins, search
 
-Interfaz para agentes 
+Agent interface
 
-graph.json + GRAPH_REPORT.md (muy eficiente en tokens) 
+graph.json + GRAPH_REPORT.md (very token-efficient)
 
-CLAUDE.md + wikilinks + CLI + MCP 
+CLAUDE.md + wikilinks + CLI + MCP
 
-Memoria persistente 
+Persistent memory
 
-No — es un mapa estático (actualizable con --update) 
+No — static map (updatable with --update)
 
-Sí — hot cache, episodic, semantic layers 
+Yes — hot cache, episodic, semantic layers
 
-Multimodal nativo 
+Native multimodal
 
-Sí — código + PDFs + imágenes + video en un grafo 
+Yes — code + PDFs + images + video in one graph
 
-Solo Markdown nativo (plugins para otros formatos) 
+Markdown native only (plugins for other formats)
 
-Detección de comunidades 
+Community detection
 
-Sí — Leiden algorithm automático 
+Yes — automatic Leiden algorithm
 
-Manual via carpetas y tags 
+Manual via folders and tags
 
-God nodes / puntos centrales 
+God nodes / central points
 
-Identificados automáticamente (betweenness centrality) 
+Identified automatically (betweenness centrality)
 
-Inferidos visualmente en el graph view 
+Visually inferred in graph view
 
 
-### El flujo de integración óptimo 
+### The optimal integration flow
 
-Graphify y Obsidian son complementarios. Graphify es el mejor preprocesador de ingesta masiva para vaults técnicos con código, PDFs y documentación mezclada. El flujo más documentado en la comunidad (mayo 2026): 
+Graphify and Obsidian are complementary. Graphify is the best bulk ingestion preprocessor for technical vaults with code, PDFs, and mixed documentation. The most documented flow in the community (May 2026):
 
-Flujo integrado Graphify → Obsidian 
-# 1. Depositar material crudo en raw/ raw/ ├── codigo-fuente/
-├── documentacion.pdf
-├── reunion-arquitectura.mp4
-└── papers/ # 2. Graphify procesa raw/ y genera wiki Markdown /graphify ./raw --wiki --obsidian --obsidian-dir ~/vault/wiki/graphify-out # 3. El vault de Obsidian recibe las notas wiki generadas wiki/graphify-out/ ← notas auto-generadas por Graphify ├── index.md ← índice del grafo ├── AuthService.md ← nota por entidad └── GRAPH_REPORT.md ← god nodes y conexiones sorpresivas # 4. Regla de consulta de 3 capas en CLAUDE.md: # Capa 1: graphify-out/GRAPH_REPORT.md → estructura y relaciones # Capa 2: vault de Obsidian → decisiones, progreso, contexto # Capa 3: archivos crudos → solo cuando se va a editar 
+Integrated Graphify → Obsidian flow
+# 1. Deposit raw material in raw/ raw/ ├── source-code/
+├── documentation.pdf
+├── architecture-meeting.mp4
+└── papers/ # 2. Graphify processes raw/ and generates Markdown wiki /graphify ./raw --wiki --obsidian --obsidian-dir ~/vault/wiki/graphify-out # 3. The Obsidian vault receives the auto-generated wiki notes wiki/graphify-out/ ← notes auto-generated by Graphify ├── index.md ← graph index ├── AuthService.md ← note per entity └── GRAPH_REPORT.md ← god nodes and surprising connections # 4. 3-layer query rule in CLAUDE.md: # Layer 1: graphify-out/GRAPH_REPORT.md → structure and relationships # Layer 2: Obsidian vault → decisions, progress, context # Layer 3: raw files → only when editing
 
 
-### Limitaciones documentadas 
+### Documented limitations
 
-- Graph drift: cuando se agregan nuevos archivos con --update , Graphify re-detecta comunidades pero no elimina automáticamente relaciones obsoletas de indexaciones anteriores. Puede generar nodos duplicados y relaciones rotas si el corpus cambia estructuralmente. 
+- Graph drift: when new files are added with --update, Graphify re-detects communities but does not automatically remove stale relationships from previous indexing runs. Can generate duplicate nodes and broken relationships if the corpus changes structurally.
 
-- Optimizado para código: las 3 pasadas están diseñadas pensando en repositorios técnicos. Para vaults de conocimiento puramente conceptual (sin código), la Pasada 1 no aporta mucho y el costo de Pasada 3 puede ser alto. 
+- Optimized for code: the 3 passes are designed with technical repositories in mind. For purely conceptual knowledge vaults (no code), Pass 1 doesn't contribute much and the Pass 3 cost can be high.
 
-- No reemplaza la capa editorial: Graphify detecta relaciones estructurales y sintácticas. No puede detectar relaciones semánticas de alto nivel que requieren juicio humano ("esta decisión de arquitectura está motivada por esta restricción de negocio"). 
+- Does not replace the editorial layer: Graphify detects structural and syntactic relationships. It cannot detect high-level semantic relationships that require human judgment ("this architecture decision is motivated by this business constraint").
 
-- Requiere Python 3.10+: dependencia adicional si el entorno de trabajo es principalmente Node.js. 
+- Requires Python 3.10+: additional dependency if the work environment is primarily Node.js.
 
-### ¿Cuándo usar Graphify con Obsidian? 
+### When to use Graphify with Obsidian
 
-- Tienes un repositorio de código existente que quieres documentar en el vault 
+- You have an existing code repository you want to document in the vault
 
-- Tienes una colección de PDFs técnicos, papers o manuales que procesar en masa 
+- You have a collection of technical PDFs, papers, or manuals to process in bulk
 
-- Quieres documentar automáticamente la arquitectura de un sistema existente antes de construir el cerebro manualmente 
+- You want to automatically document the architecture of an existing system before building the brain manually
 
-- Las grabaciones de reuniones o videos técnicos son una fuente de conocimiento importante 
+- Meeting recordings or technical videos are an important knowledge source
 
-### ¿Cuándo NO necesitas Graphify? 
+### When you do NOT need Graphify
 
-- Tu vault es de conocimiento conceptual sin código ni documentos técnicos pesados 
+- Your vault is conceptual knowledge without code or heavy technical documents
 
-- Prefieres construir las conexiones manualmente (más lento, más preciso) 
+- You prefer to build connections manually (slower, more precise)
 
-- Tus fuentes son principalmente texto web (Web Clipper + /defuddle skill es suficiente) 
+- Your sources are primarily web text (Web Clipper + /defuddle skill is sufficient)
 
 
-### Nota final: el documento como primer nodo del grafo 
+### Final note: this document as the first graph node
 
-Este documento está diseñado para ser el punto de entrada al sistema que describe. La investigación aquí contenida puede ingestarse al vault como fuente raw, compilarse en páginas wiki temáticas, y servir como referencia para consultas futuras sobre la arquitectura del cerebro que se está construyendo. 
+This document is designed to be the entry point to the system it describes. The research contained here can be ingested into the vault as raw source, compiled into thematic wiki pages, and serve as reference for future queries about the architecture of the brain being built.
 
-Los temas pendientes de investigación futura que nutren lo ya documentado: 
+Topics pending future research that build on what is already documented:
 
-- Integración con n8n para orquestación de flujos de ingesta automatizados 
+- Integration with n8n for orchestration of automated ingestion flows
 
-- Obsidian Publish como capa de publicación selectiva del conocimiento compilado 
+- Obsidian Publish as a layer for selective publication of compiled knowledge
 
-- Canvas generativo — uso de la skill json-canvas para crear mapas visuales de conocimiento automáticamente 
+- Generative canvas — use of the json-canvas skill to create visual knowledge maps automatically
 
-- Migración de conocimiento desde otras plataformas (Notion, Apple Notes, Evernote) al vault 
+- Knowledge migration from other platforms (Notion, Apple Notes, Evernote) to the vault
 
-- Sincronización multi-dispositivo con Obsidian Sync o alternativas (Self-hosted LiveSync) 
+- Multi-device sync with Obsidian Sync or alternatives (Self-hosted LiveSync)
 
-- Google Antigravity + Graphify para workflows de ingeniería de software a gran escala 
+- Google Antigravity + Graphify for large-scale software engineering workflows
 
-Este documento es vivo · v2.0 actualizado mayo 2026 · Cada nuevo tema de investigación se documenta en esta misma estructura y se agrega como sección nueva. 
+This document is living · v2.0 updated May 2026 · Each new research topic is documented in this same structure and added as a new section.
 
 
-Obsidian + IA: Cerebros de Conocimiento Persistente 
-Investigación técnica completa · Partes I–XII · Abril 2026 
-
-v2.0 · Mayo 2026 
-Obsidian 1.12.7 · Graphify v3 
-Claude Sonnet 4.6
+Obsidian + AI: Persistent Knowledge Brains
+Complete technical research · Parts I–XIII · April–May 2026
